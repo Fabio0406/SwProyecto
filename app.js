@@ -43,6 +43,6 @@ app.use((req, res, next) => {
     res.status(404).render('error');  // Renderiza la vista "error.ejs"
   });
   
-app.listen(4000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log('Servidor corriendo en puerto 4000');
 });
