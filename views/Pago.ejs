@@ -1,0 +1,26 @@
+<!-- views/pago.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pago En Proceso</title>
+</head>
+
+<body>
+    <!-- Incluir la Sidebar -->
+    <div class="col-auto">
+        <%- include('./partials/sidebar.ejs') %>
+    </div>
+    <h1>¡Pago En Proceso!</h1>
+    <p>Tu pago esta sido procesado correctamente.</p>
+
+    <% if (qrImage) { %>
+        <h2>Escanea el siguiente código QR para completar el pago:</h2>
+        <img src="data:image/png;base64,<%= qrImage %>" alt="QR Code">
+        <% } %>
+
+            <p>Gracias por tu pago. Tu ID de pago es <%= pagoId %>.</p>
+</body>
+
+</html>

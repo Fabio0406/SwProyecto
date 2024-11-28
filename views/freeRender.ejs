@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Render AI - Versión Gratuita</title>
+    <link rel="icon" href="public/images/favicon.png">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-color: rgba(0, 0, 0, 0.603);
+            background-blend-mode: darken;
+        }
+
+        .login-container {
+            background-color: #1e1e1e;
+            /* Fondo oscuro para el contenedor */
+            padding: 40px;
+            border-radius: 8px;
+            width: 500px;
+            box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        label {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #6c63ff;
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        button:hover:enabled {
+            background-color: #574dcf;
+        }
+
+        .info {
+            color: red;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .uploaded-preview {
+            width: 100%;
+            height: 200px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .uploaded-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .generated-image {
+            width: 100%;
+            /* Ocupa todo el ancho disponible */
+            height: 100%;
+            /* Ocupa todo el alto disponible */
+            object-fit: contain;
+            /* Ajusta la imagen generada sin distorsionarse */
+            display: none;
+            /* Se muestra después del procesamiento */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Incluir la Sidebar -->
+    <div class="col-auto">
+        <%- include('./partials/sidebar.ejs') %>
+    </div>
+    <div class="login-container">
+        <h1>Generador de Render - Gratuito</h1>
+        <form action="/process" method="post" enctype="multipart/form-data">
+            <label for="file">Sube tu Boceto:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+
+            <div class="uploaded-preview" id="uploaded-preview">
+                <img id="uploaded-image" alt="Carga del Boceto">
+            </div>
+            <label for="size">Titulo</label>
+            <input type="text" id="titulo" name="titulo" placeholder="Ejemplo: casa moderna" required>
+            <br><br>
+            <label for="style">Estilo:</label>
+            <select id="style" name="style">
+                <option value="international">Economico</option>
+                <option value="classic">Clasico</option>
+                <option value="modern">Moderno</option>
+            </select>
+
+            <label for="environment">Entorno:</label>
+            <select id="environment" name="environment">
+                <option value="clean">Limpio</option>
+                <option value="urban">Urbano</option>
+                <option value="natural">Natural</option>
+            </select>
+
+            <label for="size">Tamaño en metros cuadrados:</label>
+            <input type="number" id="size" name="size" placeholder="Ejemplo: 150" required>
+            <br><br>
+
+            <label for="floors">Número de pisos:</label>
+            <select id="floors" name="floors" required>
+                <option value="1">1 Piso</option>
+                <option value="2">2 Pisos</option>
+                <option value="3">3 Pisos</option>
+            </select>
+            <br><br>
+
+            <button type="submit" id="generate-btn">Generar Render</button>
+        </form>
+        <div class="info" id="info">Tienes <%= intentos %> intentos restantes.</div>
+    </div>
+    
+
+
+    <script>
+        const uploadForm = document.getElementById('upload-form');
+        const uploadedImage = document.getElementById('uploaded-image');
+        const generatedImage = document.getElementById('generated-image');
+
+        // Previsualizar la imagen subida
+        document.getElementById('image').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                uploadedImage.src = URL.createObjectURL(file);
+                uploadedImage.style.display = 'block';
+            }
+        });
+
+    </script>
+</body>
+
+</html>

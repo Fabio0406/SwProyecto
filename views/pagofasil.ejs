@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Realizar Pago</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .form-container h1 {
+            text-align: center;
+        }
+        .form-container label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="col-auto">
+        <%- include('./partials/sidebar.ejs') %> <!-- Asegúrate de que la sidebar esté bien configurada -->
+    </div>
+    <div class="form-container">
+        <h1>Formulario de Pago</h1>
+        <form action="/procesar-pago" method="POST">
+            <label for="userId">ID del Usuario:</label>
+            <input type="submit" id="userId" name="userId" value="<%= user %>">
+            
+            <label for="monto">Monto a Pagar:</label>
+            <input type="submit" id="monto" name="monto" value="390 bs">
+
+            <label for="tipoServicio">Tipo de Servicio:</label>
+            <select id="tipoServicio" name="tipoServicio" required>
+                <option value="1">QR</option>
+                <option value="2">Tigo Money</option>
+            </select>
+
+            <label for="correo">Correo Electrónico:</label>
+            <input type="email" id="correo" name="correo" required>
+
+            <label for="telefono">Número de Teléfono:</label>
+            <input type="text" id="telefono" name="telefono" required>
+
+            <label for="detalles">Detalles (Opcional):</label>
+            <input type="text" id="detalles" name="detalles">
+
+            <button type="submit">Realizar Pago</button>
+        </form>
+    </div>
+
+</body>
+</html>

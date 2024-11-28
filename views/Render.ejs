@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador Render</title>
+    <link rel="icon" href="public/images/favicon.png">
+</head>
+
+<body>
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Incluir la Sidebar -->
+                <div class="col-auto">
+                    <%- include('./partials/sidebar.ejs') %> <!-- Asegúrate de que la sidebar esté bien configurada -->
+                </div>
+                <!-- Contenido Principal -->
+                <div class="container-suscripcion">
+                    <h1>Felicidades Render Generado</h1>
+                    <br>
+                    <h3 class="subtitle">Imagen Generada:</h3>
+                    <br>
+                    <img src="<%= generatedImageUrl %>" alt="Imagen generada" style="max-width: 100%; height: auto;">
+                    <br>
+                    <h3 class="subtitle">Costo Estimado: <%= cost %>
+                    </h3>
+                    <br>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1>Felicidades Render Generado</h1>
+
+
+</body>
+
+</html>

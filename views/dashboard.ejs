@@ -1,21 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
-  <link rel="stylesheet" href="/public/styles.css">
-</head>
-<body>
-  <h1>Bienvenido al Dashboard</h1>
-  <p>Hola, <%= user.username %>!</p>
+  <link rel="stylesheet" href="/public/css/styles2.css">
+  <style>
+    /* Mis Renders */
+    .my-renders {
+      margin-top: 50px;
+      padding: 50px 0;
+      background-color: #1c1c1c;
+      width: 100%;
+      text-align: center;
+    }
 
-  <nav>
-    <ul>
-      <li><a href="/profile">Perfil</a></li>
-      <li><a href="/settings">Configuración</a></li>
-      <li><a href="/logout">Cerrar sesión</a></li>
-    </ul>
-  </nav>
+    .my-renders h2 {
+      font-size: 3rem;
+      color: #b19cd9;
+      margin-bottom: 20px;
+    }
+
+    .renders-gallery {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* Estilo para las cartas */
+    .card {
+      background-color: #333;
+      width: 250px;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+      text-align: center;
+      color: #fff;
+    }
+
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      font-size: 1.8rem;
+      color: #b19cd9;
+      margin: 10px 0;
+    }
+
+    .card p {
+      font-size: 1rem;
+      color: #ccc;
+      margin-bottom: 15px;
+    }
+
+    .card button {
+      padding: 10px 20px;
+      background-color: #6c63ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .card button:hover {
+      background-color: #4b45b1;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Incluir la Sidebar -->
+  <div class="col-auto">
+    <%- include('./partials/sidebar.ejs') %>
+  </div>
+  <div id="page-content-wrapper">
+    <div class="row">
+
+      <!-- Contenido Principal -->
+      <div class="carousel">
+        <img src="public/images/casa1.png" alt="Render 1">
+        <img src="public/images/casa2.png" alt="Render 2">
+        <img src="public/images/casa3.png" alt="Render 3">
+        <img src="public/images/casa4.png" alt="Render 4">
+        <img src="public/images/casa5.png" alt="Render 5">
+        <img src="public/images/casa6.png" alt="Render 6">
+      </div>
+      <div class="overlay">
+        <h1>RENDER<span>IA</span></h1>
+        <br>
+        <p>¡Hola, <%= user.username %>!</p>
+        <p>Crea renders fotorealistas en un lapso de 15 segundos usando IA</p>
+      </div>
+      <div class="card" style="width: 18rem;">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+      <!-- Mis Renders -->
+
+
+      <% if (proyectos) { %>
+
+
+        <div class="my-renders">
+          <h2>Mis Renders</h2>
+          <div class="renders-gallery">
+            <% for (let i=0; i < proyectos.length; i++) { %>
+              <!-- Carta de render 1 -->
+              <div class="card">
+                <img src="<%= proyectos[i].dir %>" alt="Render 1">
+                <h3>
+                  <%= proyectos[i].titulo %>
+                </h3>
+                <p>La estimacion fue de : <%= proyectos[i].estimacion %>.</p>
+                <button onclick="downloadImage('<%= proyectos[i].dir %>')">Descargar</button>
+              </div>
+              <% } %>
+
+                <% } %>
+
+                  <script>
+                    function downloadImage(imageSrc) {
+                      const link = document.createElement('a');
+                      link.href = imageSrc;
+                      link.download = imageSrc.split('/').pop();
+                      link.click();
+                    }
+                  </script>
+          </div>
+        </div>
+    </div>
 </body>
+
 </html>

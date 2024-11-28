@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor Simplificado</title>
+  <link rel="stylesheet" href="/public/css/styles2.css">
+</head>
+<body>
+    <div id="page-content-wrapper">
+        <div class="row">
+          <!-- Incluir la Sidebar -->
+          <div class="col-auto">
+                <%- include('./partials/sidebar.ejs') %>
+          </div>
+
+          <!-- Barra de herramientas -->
+          <div class="toolbar">
+              <p>Barra de herramientas</p>
+              <button id="upload">Subir</button>
+              <button id="flip">Voltear</button>
+              <button id="draw">Dibujar</button>
+              <button id="undo">Deshacer</button>
+              <button id="redo">Rehacer</button>
+              <button id="download">Descargar</button>
+          </div>
+
+          <!-- Área de edición -->
+          <div class="editor-container">
+              <canvas id="canvas" width="800" height="600"></canvas>
+              <input type="file" id="fileInput" accept="image/*" style="display: none;">
+          </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="public/js/editarboc.js"></script>
+</body>
+</html>

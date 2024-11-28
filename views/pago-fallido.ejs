@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pago Fallido</title>
+</head>
+
+<body>
+    <!-- Incluir la Sidebar -->
+    <div class="col-auto">
+        <%- include('./partials/sidebar.ejs') %>
+    </div>
+    <h1>¡Hubo un error con tu pago!</h1>
+    <p>
+        <%= error %>
+    </p>
+    <p>Por favor, intenta de nuevo o contacta al soporte si el problema persiste.</p>
+</body>
+
+</html>
