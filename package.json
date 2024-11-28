@@ -20,6 +20,9 @@
     "express": "^4.21.1",
     "express-session": "^1.18.1",
     "mongoose": "^8.7.2",
-    "nodemon": "^3.1.7"
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.7",
+    "qrcode": "^1.5.4",
+    "replicate": "^1.0.1"
   }
 }
