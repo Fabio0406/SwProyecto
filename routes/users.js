@@ -51,15 +51,15 @@ router.post('/register', async (req, res) => {
 
     // Creación del usuario
     const newUser = new User({
-        fullname,
-        email,
-        username,
+        fullname: fullname,
+        email: email,
+        username: username,
         password: hashedPassword,
-        userType
+        userType: userType
     });
 
     await newUser.save();
-    res.send('Registro exitoso');
+    res.render('login');
 });
 
 //Ruta del login
