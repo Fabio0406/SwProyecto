@@ -36,7 +36,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Rutas
 const userRoutes = require('./routes/users');
+const userRoutes2 = require('./routes/Premium'); 
 app.use('/', userRoutes);
+app.use('/',userRoutes2)
 
 // Middleware para rutas no encontradas (404)
 app.use((req, res, next) => {

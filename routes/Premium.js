@@ -23,9 +23,9 @@ router2.get('/pagofasil', isAuthenticated, (req, res) => {
 router2.post('/procesar-pago', async (req, res) => {
     try {
         const {  tipoServicio, correo, telefono, detalles } = req.body;
-        const monto = 390;
+        const monto = 0.01;
         const userId = req.session.userId;
-        const user = await User.find(userId);
+        const user = await User.find({_id: req.session.userId});
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
@@ -51,34 +51,33 @@ router2.post('/procesar-pago', async (req, res) => {
 
         // Obtener el token de autenticación
         const accessToken = await authenticateService();
-
+        console.log(accessToken)
         // Definir la URL de la API dependiendo del tipo de pago
-        const apiUrl = tipoServicio === 1
-            ? 'https://serviciostigomoney.pagofacil.com.bo/api/servicio/pagoqr'
-            : 'https://serviciostigomoney.pagofacil.com.bo/api/servicio/pagotigomoney';
+        const apiUrl ='https://serviciostigomoney.pagofacil.com.bo/api/servicio/pagoqr';
 
         const requestData = {
-            lcComerceID: process.env.PAGOFACIL_COMMERCE_ID,
-            lnMoneda: 2,
-            lnTelefono: telefono,
-            lcNombreUsuario: user.nombre,
-            lnCiNit: user.ciNit,
-            lcNroPago: pagoId,
-            lnMontoClienteEmpresa: monto,
-            lcCorreo: correo,
-            lcUrlCallBack: 'https://renderia.up.railway.app/callback-pago',
-            lcUrlReturn: "",
-            laPedidoDetalle: detalles,
-            lcUrl: ""
+            "tcComerceID": process.env.PAGOFACIL_COMMERCE_ID,
+            "tnMoneda": 2,
+            "tnTelefono": telefono,
+            "tcNombreUsuario": user.nombre,
+            "tnCiNit": user.ciNit,
+            "tcNroPago": pagoId,
+            "tnMontoClienteEmpresa": monto,
+            "tcCorreo": correo,
+            "tcUrlCallBack": "https://renderia.up.railway.app/callback-pago",
+            "tcUrlReturn": "",
+            "taPedidoDetalle": detalles,
+            "tcUrl": ""
         };
+        const jsonBody = JSON.stringify(requestData);
 
-        const response = await axios.post(apiUrl, requestData, {
+        const response = await axios.post(apiUrl, jsonBody, {
             headers: {
+                'Accept': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
-                'Accept': 'application/json'
             }
         });
-
+ console.log(response)
         if (response.data.status === 1) {
             // Obtener el qrImage
             let qrImage = '';
@@ -217,6 +216,7 @@ async function authenticateService() {
                 'Accept': 'application/json'
             }
         });
+        console.log(response.data)
 
         if (response.data.status === 1) {
             return response.data.values; // Devuelve el accessToken
