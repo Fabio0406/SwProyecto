@@ -1,8 +1,8 @@
 // routes/proyectos.js
 const express = require('express');
-const Proyecto = require('../model/Proyecto');
-const Render = require('../model/Render');
-const Usuario = require('../model/Usuario');
+const Proyecto = require('../model/Proyecto.js');
+const Render = require('../model/Render.js');
+const Usuario = require('../model/Usuario.js');
 
 // Middleware de validación y autenticación
 const { verificarAutenticacion } = require('../middleware/autenticacion');

@@ -1,7 +1,7 @@
 const express = require('express');
-const Usuario = require('../model/Usuario');
-const Suscripcion = require('../model/Suscripcion');
-const Pago = require('../model/Pago');
+const Usuario = require('../model/Usuario.js');
+const Suscripcion = require('../model/Suscripcion.js');
+const Pago = require('../model/Pago.js');
 const axios = require('axios');
 
 // Middleware de validación y autenticación
