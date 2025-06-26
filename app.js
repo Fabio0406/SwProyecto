@@ -82,9 +82,9 @@ function configurarMiddleware(aplicacion) {
  * @param {Express} aplicacion - Instancia de Express
  */
 function configurarRutas(aplicacion) {
-    const rutasUsuarios = require('./routes/usuarios');
-    const rutasPremium = require('./routes/premium'); 
-    const rutasProyectos = require('./routes/proyectos');
+    const rutasUsuarios = require('./routes/usuarios.js');
+    const rutasPremium = require('./routes/Premium.js'); 
+    const rutasProyectos = require('./routes/proyectos.js');
     
     aplicacion.use('/', rutasUsuarios);
     aplicacion.use('/', rutasPremium);
