@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Feedback</title>
+    <title>Feedback y Soporte - Render AI</title>
     <meta name="viewport" content="user-scalable=no, width=device,with" charset="utf-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="public/css/sidebar.css">
@@ -12,43 +12,465 @@
     <script type="text/javascript" src="public/js/jquery.js"></script>
     <script type="text/javascript" src="public/js/sidebar.js"></script>
 
-  <script>
-    function selectStar(index) {
-        const stars = document.querySelectorAll('.stars i');
-        stars.forEach((star, i) => {
-            star.classList.toggle('active', i <= index);
-        });
-    }
-</script>
+    <style>
+        /* Estilos específicos para el feedback */
+        body {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .feedback-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid #444;
+        }
+
+        .feedback-container h1 {
+            font-size: 2.5rem;
+            color: #b19cd9;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .feedback-container h3 {
+            font-size: 1.2rem;
+            color: #ccc;
+            text-align: center;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        /* Sistema de estrellas mejorado */
+        .rating-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 1px solid #555;
+        }
+
+        .rating-label {
+            font-size: 1.3rem;
+            color: #b19cd9;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .star {
+            font-size: 2.5rem;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            user-select: none;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffd700;
+            transform: scale(1.2);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .star.active {
+            animation: pulse 0.6s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1.2); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1.2); }
+        }
+
+        .rating-text {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #999;
+            min-height: 25px;
+        }
+
+        /* Formulario de feedback */
+        .feedback-form {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #555;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.1rem;
+            color: #b19cd9;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #666;
+            border-radius: 8px;
+            background-color: #333;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #6c63ff;
+            box-shadow: 0 0 10px rgba(108, 99, 255, 0.3);
+            background-color: #444;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        /* Botón de envío */
+        .submit-button {
+            background: linear-gradient(135deg, #6c63ff, #574dcf);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto 0;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
+        }
+
+        .submit-button:hover {
+            background: linear-gradient(135deg, #574dcf, #4b45b1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 99, 255, 0.6);
+        }
+
+        .submit-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Mensajes de estado */
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .message.success {
+            background-color: #1f4f2f;
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+        }
+
+        .message.error {
+            background-color: #4f1f1f;
+            border: 1px solid #f44336;
+            color: #f44336;
+        }
+
+        /* Tipos de consulta */
+        .consultation-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .consultation-type {
+            background: #333;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #555;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .consultation-type:hover {
+            background: #444;
+            border-color: #6c63ff;
+        }
+
+        .consultation-type input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .feedback-container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .stars {
+                gap: 5px;
+            }
+            
+            .star {
+                font-size: 2rem;
+            }
+            
+            .consultation-types {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div id="page-content-wrapper">
-        <div class="row">
-          <!-- Incluir la Sidebar -->
-          <div class="col-auto">
-                <%- include('./partials/sidebar.ejs') %>
-          </div>
-
-          <!-- Contenido Principal -->
-          <div class="feedback-container">
-                <h3>Gracias por usar "RenderIA"</h3>
-                <h1>Valoramos tu opinión</h1>
-                <h3>Este espacio es para Soporte y Feedback</h3>
-                <h3>Califica en escala tu experiencia con "RenderIA"</h3>
-                <div class="stars">
-                    <i class="star" onclick="selectStar(0)">★</i>
-                    <i class="star" onclick="selectStar(1)">★</i>
-                    <i class="star" onclick="selectStar(2)">★</i>
-                    <i class="star" onclick="selectStar(3)">★</i>
-                    <i class="star" onclick="selectStar(4)">★</i>
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Incluir la Sidebar -->
+                <div class="col-auto">
+                    <%- include('./partials/sidebar.ejs') %>
                 </div>
-                <textarea rows="4" placeholder="Déjanos tus comentarios"></textarea>
-                <br>
-                <button>Mandar Comentarios</button>
+
+                <!-- Contenido Principal -->
+                <div class="col">
+                    <div class="feedback-container">
+                        <h1>💬 Feedback y Soporte</h1>
+                        <h3>Gracias por usar "RenderIA"</h3>
+                        <h3>Valoramos tu opinión y queremos mejorar tu experiencia</h3>
+
+                        <!-- Mostrar mensajes -->
+                        <% if (typeof error !== 'undefined' && error) { %>
+                            <div class="message error">❌ <%= error %></div>
+                        <% } %>
+
+                        <% if (typeof exito !== 'undefined' && exito) { %>
+                            <div class="message success">✅ <%= exito %></div>
+                        <% } %>
+
+                        <!-- Formulario de Feedback -->
+                        <form id="feedbackForm" action="/feedback" method="POST" class="feedback-form">
+                            <!-- Tipo de consulta -->
+                            <div class="form-group">
+                                <label>Tipo de consulta:</label>
+                                <div class="consultation-types">
+                                    <label class="consultation-type">
+                                        <input type="radio" name="tipoConsulta" value="feedback" checked>
+                                        <span>💬 Feedback General</span>
+                                    </label>
+                                    <label class="consultation-type">
+                                        <input type="radio" name="tipoConsulta" value="soporte">
+                                        <span>🛠️ Soporte Técnico</span>
+                                    </label>
+                                    <label class="consultation-type">
+                                        <input type="radio" name="tipoConsulta" value="sugerencia">
+                                        <span>💡 Sugerencia</span>
+                                    </label>
+                                    <label class="consultation-type">
+                                        <input type="radio" name="tipoConsulta" value="bug">
+                                        <span>🐛 Reportar Bug</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Sistema de calificación -->
+                            <div class="rating-section">
+                                <div class="rating-label">Califica tu experiencia con RenderIA:</div>
+                                <div class="stars" id="starRating">
+                                    <span class="star" data-rating="1">★</span>
+                                    <span class="star" data-rating="2">★</span>
+                                    <span class="star" data-rating="3">★</span>
+                                    <span class="star" data-rating="4">★</span>
+                                    <span class="star" data-rating="5">★</span>
+                                </div>
+                                <div class="rating-text" id="ratingText">Selecciona una calificación</div>
+                                <input type="hidden" name="calificacion" id="ratingValue" value="">
+                            </div>
+
+                            <!-- Información de contacto -->
+                            <div class="form-group">
+                                <label for="nombre">Nombre (opcional):</label>
+                                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email (opcional):</label>
+                                <input type="email" id="email" name="email" placeholder="tu@email.com">
+                            </div>
+
+                            <!-- Asunto -->
+                            <div class="form-group">
+                                <label for="asunto">Asunto:</label>
+                                <input type="text" id="asunto" name="asunto" placeholder="Breve descripción del tema" required>
+                            </div>
+
+                            <!-- Comentarios -->
+                            <div class="form-group">
+                                <label for="comentarios">Déjanos tus comentarios:</label>
+                                <textarea id="comentarios" name="comentarios" placeholder="Cuéntanos sobre tu experiencia, problemas encontrados, sugerencias de mejora, o cualquier otro comentario..." required></textarea>
+                            </div>
+
+                            <!-- Información del sistema (oculta) -->
+                            <input type="hidden" name="userAgent" id="userAgent">
+                            <input type="hidden" name="url" id="currentUrl">
+
+                            <button type="submit" class="submit-button" id="submitBtn">
+                                📤 Enviar Feedback
+                            </button>
+                        </form>
+
+                        <!-- Información adicional -->
+                        <div style="margin-top: 30px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 10px; text-align: center;">
+                            <h3 style="color: #b19cd9; margin-bottom: 15px;">📞 Otros canales de contacto</h3>
+                            <p style="color: #ccc; margin: 8px 0;">📧 Email: soporte@renderia.com</p>
+                            <p style="color: #ccc; margin: 8px 0;">💬 WhatsApp: +591 7XXXXXXX</p>
+                            <p style="color: #ccc; margin: 8px 0;">🕒 Horario de atención: Lunes a Viernes, 9:00 - 18:00</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-          
-        </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('.star');
+            const ratingText = document.getElementById('ratingText');
+            const ratingValue = document.getElementById('ratingValue');
+            const form = document.getElementById('feedbackForm');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Textos para cada calificación
+            const ratingTexts = {
+                1: '😞 Muy insatisfecho - Necesitamos mejorar mucho',
+                2: '🙁 Insatisfecho - Hay varios problemas que resolver',
+                3: '😐 Neutral - Está bien, pero puede mejorar',
+                4: '😊 Satisfecho - Me gusta, solo algunos detalles',
+                5: '🤩 Muy satisfecho - ¡Excelente experiencia!'
+            };
+
+            // Manejar clicks en las estrellas
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = this.getAttribute('data-rating');
+                    setRating(rating);
+                });
+
+                star.addEventListener('mouseenter', function() {
+                    const rating = this.getAttribute('data-rating');
+                    highlightStars(rating);
+                });
+            });
+
+            // Restaurar estrellas al salir del hover
+            document.getElementById('starRating').addEventListener('mouseleave', function() {
+                const currentRating = ratingValue.value;
+                if (currentRating) {
+                    highlightStars(currentRating);
+                } else {
+                    clearStars();
+                }
+            });
+
+            function setRating(rating) {
+                ratingValue.value = rating;
+                highlightStars(rating);
+                ratingText.textContent = ratingTexts[rating];
+                
+                // Animar las estrellas
+                stars.forEach((star, index) => {
+                    if (index < rating) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+            }
+
+            function highlightStars(rating) {
+                stars.forEach((star, index) => {
+                    if (index < rating) {
+                        star.style.color = '#ffd700';
+                        star.style.transform = 'scale(1.1)';
+                    } else {
+                        star.style.color = '#555';
+                        star.style.transform = 'scale(1)';
+                    }
+                });
+            }
+
+            function clearStars() {
+                stars.forEach(star => {
+                    star.style.color = '#555';
+                    star.style.transform = 'scale(1)';
+                });
+            }
+
+            // Manejar envío del formulario
+            form.addEventListener('submit', function(e) {
+                // Agregar información del sistema
+                document.getElementById('userAgent').value = navigator.userAgent;
+                document.getElementById('currentUrl').value = window.location.href;
+
+                // Validar calificación
+                if (!ratingValue.value) {
+                    e.preventDefault();
+                    alert('⭐ Por favor, selecciona una calificación antes de enviar.');
+                    return;
+                }
+
+                // Mostrar loading
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '⏳ Enviando...';
+
+                // El formulario se enviará normalmente
+            });
+
+            // Manejar tipos de consulta
+            const consultationTypes = document.querySelectorAll('input[name="tipoConsulta"]');
+            consultationTypes.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const labels = document.querySelectorAll('.consultation-type');
+                    labels.forEach(label => label.style.background = '#333');
+                    this.closest('.consultation-type').style.background = '#444';
+                });
+            });
+
+            // Auto-resize para textarea
+            const textarea = document.getElementById('comentarios');
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        });
+    </script>
 </body>
 </html>

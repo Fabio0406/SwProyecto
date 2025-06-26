@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Render AI - Versión Premium</title>
+    <link rel="icon" href="public/images/favicon.png">
+    <link rel="stylesheet" href="/public/css/styles2.css">
     <style>
         body {
             display: flex;
@@ -41,6 +43,7 @@
             color: #bbb;
             font-size: 14px;
             margin-bottom: 5px;
+            display: block;
         }
 
         input,
@@ -54,6 +57,11 @@
             font-size: 14px;
             background-color: #3a3a3a;
             color: #fff;
+            box-sizing: border-box;
+        }
+
+        input::placeholder {
+            color: #aaa;
         }
 
         button {
@@ -64,8 +72,22 @@
             font-weight: bold;
         }
 
-        button:hover {
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        button:hover:enabled {
             background-color: #574dcf;
+        }
+
+        .login-container {
+            background-color: #1e1e1e;
+            padding: 40px;
+            border-radius: 8px;
+            width: 500px;
+            box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
+            color: #fff;
         }
 
         .uploaded-preview {
@@ -78,12 +100,18 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            margin-bottom: 15px;
         }
 
         .uploaded-preview img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
+        }
+
+        .uploaded-preview-placeholder {
+            color: #888;
+            text-align: center;
         }
 
         .main-content {
@@ -98,88 +126,231 @@
 
         .generated-image {
             width: 100%;
-            /* Ocupa todo el ancho disponible */
             height: 100%;
-            /* Ocupa todo el alto disponible */
             object-fit: contain;
-            /* Ajusta la imagen generada sin distorsionarse */
             display: none;
-            /* Se muestra después del procesamiento */
         }
-        .login-container {
-            background-color: #1e1e1e;
-            /* Fondo oscuro para el contenedor */
-            padding: 40px;
-            border-radius: 8px;
-            width: 500px;
-            box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
+
+        .info {
+            color: #4CAF50;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+            background-color: #1f2a1f;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .premium-badge {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            background-color: #2a1f1f;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            background-color: #1f2a1f;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-    <!-- Incluir la Sidebar -->
-    <div class="col-auto">
-        <%- include('./partials/sidebar.ejs') %>
-    </div>
-    <div class="login-container">
-        <h1>Generador de Render - Premium</h1>
-        <form action="/process" method="post" enctype="multipart/form-data">
-            <label for="file">Sube tu Boceto:</label>
-            <input type="file" id="image" name="image" accept="image/*" required>
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Incluir la Sidebar -->
+                <div class="col-auto">
+                    <%- include('./partials/sidebar.ejs') %>
+                </div>
+                
+                <!-- Contenido Principal -->
+                <div class="col d-flex justify-content-center align-items-center">
+                    <div class="login-container">
+                        <div class="premium-badge">
+                            ⭐ USUARIO PREMIUM ⭐
+                        </div>
+                        
+                        <h1>Generador de Render - Premium</h1>
+                        
+                        <!-- Mostrar mensajes de error o éxito -->
+                        <% if (typeof error !== 'undefined' && error) { %>
+                            <div class="error-message"><%= error %></div>
+                        <% } %>
+                        
+                        <% if (typeof exito !== 'undefined' && exito) { %>
+                            <div class="success-message"><%= exito %></div>
+                        <% } %>
+                        
+                        <form action="/process" method="post" enctype="multipart/form-data">
+                            <label for="imagen">Sube tu Boceto:</label>
+                            <input type="file" id="imagen" name="imagen" accept="image/*" required>
 
-            <div class="uploaded-preview" id="uploaded-preview">
-                <img id="uploaded-image" alt="Carga del Boceto">
+                            <div class="uploaded-preview" id="uploaded-preview">
+                                <div class="uploaded-preview-placeholder">
+                                    <p>Vista previa del boceto aparecerá aquí</p>
+                                </div>
+                                <img id="uploaded-image" alt="Vista previa del boceto" style="display: none;">
+                            </div>
+                            
+                            <label for="titulo">Título del Proyecto:</label>
+                            <input type="text" id="titulo" name="titulo" placeholder="Ejemplo: casa moderna" required>
+
+                            <label for="estilo">Estilo Arquitectónico:</label>
+                            <select id="estilo" name="estilo" required>
+                                <option value="internacional">Económico</option>
+                                <option value="clasico">Clásico</option>
+                                <option value="moderno">Moderno</option>
+                                <option value="contemporaneo">Contemporáneo</option>
+                                <option value="minimalista">Minimalista</option>
+                                <option value="industrial">Industrial</option>
+                            </select>
+
+                            <label for="ambiente">Entorno:</label>
+                            <select id="ambiente" name="ambiente" required>
+                                <option value="clean">Limpio</option>
+                                <option value="urban">Urbano</option>
+                                <option value="natural">Natural</option>
+                                <option value="luxurious">Lujoso</option>
+                                <option value="rustic">Rústico</option>
+                            </select>
+
+                            <label for="tamaño">Tamaño en metros cuadrados:</label>
+                            <input type="number" id="tamano" name="tamano" placeholder="Ejemplo: 150" min="1" max="10000" required>
+
+                            <label for="pisos">Número de pisos:</label>
+                            <select id="pisos" name="pisos" required>
+                                <option value="1">1 Piso</option>
+                                <option value="2">2 Pisos</option>
+                                <option value="3">3 Pisos</option>
+                                <option value="4">4 Pisos</option>
+                                <option value="5">5+ Pisos</option>
+                            </select>
+
+                            <label for="acabados">Tipo de acabados:</label>
+                            <select id="acabados" name="acabados" required>
+                                <option value="economicos">Económicos</option>
+                                <option value="medios">Medios</option>
+                                <option value="premium">Premium</option>
+                                <option value="lujo">Lujo</option>
+                            </select>
+
+                            <button type="submit" id="generate-btn">
+                                🎨 Generar Render Premium
+                            </button>
+                        </form>
+                        
+                        <div class="info">
+                            🚀 Disfruta de renders ilimitados y de alta calidad en la versión Premium.
+                            <br>
+                            ✨ Acceso a estilos exclusivos y mayor precisión en estimaciones.
+                        </div>
+                    </div>
+                </div>
             </div>
-            <label for="size">Titulo</label>
-            <input type="text" id="titulo" name="titulo" placeholder="Ejemplo: casa moderna" required>
-            <br><br>
-            <label for="style">Estilo:</label>
-            <select id="style" name="style">
-                <option value="international">Economico</option>
-                <option value="classic">Clasico</option>
-                <option value="modern">Moderno</option>
-            </select>
-
-            <label for="environment">Entorno:</label>
-            <select id="environment" name="environment">
-                <option value="clean">Limpio</option>
-                <option value="urban">Urbano</option>
-                <option value="natural">Natural</option>
-            </select>
-
-            <label for="size">Tamaño en metros cuadrados:</label>
-            <input type="number" id="size" name="size" placeholder="Ejemplo: 150" required>
-            <br><br>
-
-            <label for="floors">Número de pisos:</label>
-            <select id="floors" name="floors" required>
-                <option value="1">1 Piso</option>
-                <option value="2">2 Pisos</option>
-                <option value="3">3 Pisos</option>
-            </select>
-            <br><br>
-
-            <button type="submit" id="generate-btn">Generar Render</button>
-        </form>
-        <div class="info">Disfruta de uso ilimitado en la versión Premium.</div>
-    </div>
-    <div class="main-content">
-        <img id="generated-image" class="generated-image" alt="Render Generado">
+        </div>
     </div>
 
     <script>
-        const uploadForm = document.getElementById('upload-form');
-        const uploadedImage = document.getElementById('uploaded-image');
-        const generatedImage = document.getElementById('generated-image');
-
         // Previsualizar la imagen subida
-        document.getElementById('file').addEventListener('change', (event) => {
+        document.getElementById('imagen').addEventListener('change', function(event) {
             const file = event.target.files[0];
+            const uploadedImage = document.getElementById('uploaded-image');
+            const placeholder = document.querySelector('.uploaded-preview-placeholder');
+            
             if (file) {
-                uploadedImage.src = URL.createObjectURL(file);
-                uploadedImage.style.display = 'block';
+                // Validar tamaño del archivo (máximo 10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('El archivo es demasiado grande. El tamaño máximo es 10MB.');
+                    event.target.value = '';
+                    return;
+                }
+                
+                // Validar tipo de archivo
+                if (!file.type.startsWith('image/')) {
+                    alert('Por favor, selecciona un archivo de imagen válido.');
+                    event.target.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImage.src = e.target.result;
+                    uploadedImage.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                uploadedImage.style.display = 'none';
+                placeholder.style.display = 'block';
             }
+        });
+
+        // Validar formulario antes del envío
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('imagen');
+            const titulo = document.getElementById('titulo').value.trim();
+            const tamaño = document.getElementById('tamano').value;
+            
+            if (!fileInput.files[0]) {
+                e.preventDefault();
+                alert('Por favor, sube una imagen del boceto.');
+                return;
+            }
+            
+            if (!titulo) {
+                e.preventDefault();
+                alert('Por favor, ingresa un título para el proyecto.');
+                return;
+            }
+            
+            if (!tamaño || tamaño <= 0) {
+                e.preventDefault();
+                alert('Por favor, ingresa un tamaño válido en metros cuadrados.');
+                return;
+            }
+
+            if (tamaño > 10000) {
+                e.preventDefault();
+                alert('El tamaño máximo permitido es 10,000 m².');
+                return;
+            }
+
+            // Mostrar mensaje de procesamiento
+            const button = document.getElementById('generate-btn');
+            button.disabled = true;
+            button.innerHTML = '⏳ Generando render premium...';
+            
+            // Opcional: mostrar mensaje de que puede tardar más tiempo
+            setTimeout(() => {
+                if (button.disabled) {
+                    button.innerHTML = '🎨 Procesando con IA avanzada...';
+                }
+            }, 3000);
+        });
+
+        // Efecto visual para resaltar que es versión premium
+        document.addEventListener('DOMContentLoaded', function() {
+            const premiumBadge = document.querySelector('.premium-badge');
+            setInterval(() => {
+                premiumBadge.style.transform = premiumBadge.style.transform === 'scale(1.05)' ? 'scale(1)' : 'scale(1.05)';
+            }, 2000);
         });
     </script>
 </body>

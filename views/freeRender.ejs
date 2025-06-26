@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Render AI - Versión Gratuita</title>
     <link rel="icon" href="public/images/favicon.png">
+    <link rel="stylesheet" href="/public/css/styles2.css">
     <style>
         body {
             display: flex;
@@ -23,11 +24,11 @@
 
         .login-container {
             background-color: #1e1e1e;
-            /* Fondo oscuro para el contenedor */
             padding: 40px;
             border-radius: 8px;
             width: 500px;
             box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
+            color: #fff;
         }
 
         .sidebar {
@@ -42,15 +43,16 @@
         }
 
         h1 {
-            color: #333;
+            color: #fff;
             font-size: 18px;
             text-align: center;
         }
 
         label {
-            color: #555;
+            color: #bbb;
             font-size: 14px;
             margin-bottom: 5px;
+            display: block;
         }
 
         input,
@@ -62,6 +64,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 14px;
+            box-sizing: border-box;
         }
 
         button {
@@ -82,9 +85,10 @@
         }
 
         .info {
-            color: red;
+            color: #ff6b6b;
             font-size: 14px;
             text-align: center;
+            margin-top: 10px;
         }
 
         .uploaded-preview {
@@ -97,12 +101,18 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            margin-bottom: 15px;
         }
 
         .uploaded-preview img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
+        }
+
+        .uploaded-preview-placeholder {
+            color: #666;
+            text-align: center;
         }
 
         .main-content {
@@ -117,81 +127,167 @@
 
         .generated-image {
             width: 100%;
-            /* Ocupa todo el ancho disponible */
             height: 100%;
-            /* Ocupa todo el alto disponible */
             object-fit: contain;
-            /* Ajusta la imagen generada sin distorsionarse */
             display: none;
-            /* Se muestra después del procesamiento */
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            background-color: #2a1f1f;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            background-color: #1f2a1f;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-    <!-- Incluir la Sidebar -->
-    <div class="col-auto">
-        <%- include('./partials/sidebar.ejs') %>
-    </div>
-    <div class="login-container">
-        <h1>Generador de Render - Gratuito</h1>
-        <form action="/process" method="post" enctype="multipart/form-data">
-            <label for="file">Sube tu Boceto:</label>
-            <input type="file" id="image" name="image" accept="image/*" required>
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Incluir la Sidebar -->
+                <div class="col-auto">
+                    <%- include('./partials/sidebar.ejs') %>
+                </div>
+                
+                <!-- Contenido Principal -->
+                <div class="col d-flex justify-content-center align-items-center">
+                    <div class="login-container">
+                        <h1>Generador de Render - Gratuito</h1>
+                        
+                        <!-- Mostrar mensajes de error o éxito -->
+                        <% if (typeof error !== 'undefined' && error) { %>
+                            <div class="error-message"><%= error %></div>
+                        <% } %>
+                        
+                        <% if (typeof exito !== 'undefined' && exito) { %>
+                            <div class="success-message"><%= exito %></div>
+                        <% } %>
+                        
+                        <form action="/process" method="post" enctype="multipart/form-data">
+                            <label for="imagen">Sube tu Boceto:</label>
+                            <input type="file" id="imagen" name="imagen" accept="image/*" required>
 
-            <div class="uploaded-preview" id="uploaded-preview">
-                <img id="uploaded-image" alt="Carga del Boceto">
+                            <div class="uploaded-preview" id="uploaded-preview">
+                                <div class="uploaded-preview-placeholder">
+                                    <p>Vista previa del boceto aparecerá aquí</p>
+                                </div>
+                                <img id="uploaded-image" alt="Vista previa del boceto" style="display: none;">
+                            </div>
+                            
+                            <label for="titulo">Título del Proyecto:</label>
+                            <input type="text" id="titulo" name="titulo" placeholder="Ejemplo: casa moderna" required>
+
+                            <label for="estilo">Estilo:</label>
+                            <select id="estilo" name="estilo" required>
+                                <option value="internacional">Económico</option>
+                                <option value="clasico">Clásico</option>
+                                <option value="moderno">Moderno</option>
+                            </select>
+
+                            <label for="ambiente">Entorno:</label>
+                            <select id="ambiente" name="ambiente" required>
+                                <option value="clean">Limpio</option>
+                                <option value="urban">Urbano</option>
+                                <option value="natural">Natural</option>
+                            </select>
+
+                            <label for="tamaño">Tamaño en metros cuadrados:</label>
+                            <input type="number" id="tamano" name="tamano" placeholder="Ejemplo: 150" min="1" required>
+
+                            <label for="pisos">Número de pisos:</label>
+                            <select id="pisos" name="pisos" required>
+                                <option value="1">1 Piso</option>
+                                <option value="2">2 Pisos</option>
+                                <option value="3">3 Pisos</option>
+                            </select>
+
+                            <label for="acabados">Tipo de acabados:</label>
+                            <select id="acabados" name="acabados" required>
+                                <option value="economicos">Económicos</option>
+                                <option value="medios">Medios</option>
+                                <option value="premium">Premium</option>
+                            </select>
+
+                            <button type="submit" id="generate-btn">
+                                🎨 Generar Render
+                            </button>
+                        </form>
+                        
+                        <div class="info" id="info">
+                            <% if (typeof intentos !== 'undefined') { %>
+                                Tienes <%= Math.max(0, 3 - intentos) %> renders gratuitos restantes de 3.
+                            <% } else { %>
+                                Tienes 3 renders gratuitos disponibles.
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <label for="size">Titulo</label>
-            <input type="text" id="titulo" name="titulo" placeholder="Ejemplo: casa moderna" required>
-            <br><br>
-            <label for="style">Estilo:</label>
-            <select id="style" name="style">
-                <option value="international">Economico</option>
-                <option value="classic">Clasico</option>
-                <option value="modern">Moderno</option>
-            </select>
-
-            <label for="environment">Entorno:</label>
-            <select id="environment" name="environment">
-                <option value="clean">Limpio</option>
-                <option value="urban">Urbano</option>
-                <option value="natural">Natural</option>
-            </select>
-
-            <label for="size">Tamaño en metros cuadrados:</label>
-            <input type="number" id="size" name="size" placeholder="Ejemplo: 150" required>
-            <br><br>
-
-            <label for="floors">Número de pisos:</label>
-            <select id="floors" name="floors" required>
-                <option value="1">1 Piso</option>
-                <option value="2">2 Pisos</option>
-                <option value="3">3 Pisos</option>
-            </select>
-            <br><br>
-
-            <button type="submit" id="generate-btn">Generar Render</button>
-        </form>
-        <div class="info" id="info">Tienes <%= intentos %> intentos restantes.</div>
+        </div>
     </div>
-    
-
 
     <script>
-        const uploadForm = document.getElementById('upload-form');
-        const uploadedImage = document.getElementById('uploaded-image');
-        const generatedImage = document.getElementById('generated-image');
-
         // Previsualizar la imagen subida
-        document.getElementById('image').addEventListener('change', (event) => {
+        document.getElementById('imagen').addEventListener('change', function(event) {
             const file = event.target.files[0];
+            const uploadedImage = document.getElementById('uploaded-image');
+            const placeholder = document.querySelector('.uploaded-preview-placeholder');
+            
             if (file) {
-                uploadedImage.src = URL.createObjectURL(file);
-                uploadedImage.style.display = 'block';
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImage.src = e.target.result;
+                    uploadedImage.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                uploadedImage.style.display = 'none';
+                placeholder.style.display = 'block';
             }
         });
 
+        // Validar formulario antes del envío
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('imagen');
+            const titulo = document.getElementById('titulo').value.trim();
+            const tamaño = document.getElementById('tamaño').value;
+            
+            if (!fileInput.files[0]) {
+                e.preventDefault();
+                alert('Por favor, sube una imagen del boceto.');
+                return;
+            }
+            
+            if (!titulo) {
+                e.preventDefault();
+                alert('Por favor, ingresa un título para el proyecto.');
+                return;
+            }
+            
+            if (!tamaño || tamaño <= 0) {
+                e.preventDefault();
+                alert('Por favor, ingresa un tamaño válido en metros cuadrados.');
+                return;
+            }
+
+            // Mostrar mensaje de procesamiento
+            const button = document.getElementById('generate-btn');
+            button.disabled = true;
+            button.innerHTML = '⏳ Generando render...';
+        });
     </script>
 </body>
 

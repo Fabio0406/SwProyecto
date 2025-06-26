@@ -1,26 +1,431 @@
-<!-- views/pago.ejs -->
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <title>Pago En Proceso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago En Proceso - Render AI</title>
+    <link rel="icon" href="public/images/favicon.png">
+    <link rel="stylesheet" href="/public/css/styles2.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: #fff;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        #page-content-wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .payment-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            border: 1px solid #444;
+        }
+
+        .payment-header {
+            margin-bottom: 30px;
+        }
+
+        .payment-header h1 {
+            color: #4CAF50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .payment-header .status {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .payment-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border: 1px solid #555;
+        }
+
+        .payment-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px 0;
+            border-bottom: 1px solid #444;
+        }
+
+        .payment-detail:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #b19cd9;
+        }
+
+        .detail-value {
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .qr-section {
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 2px dashed #6c63ff;
+        }
+
+        .qr-section h2 {
+            color: #6c63ff;
+            margin-bottom: 20px;
+        }
+
+        .qr-code {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .qr-code img {
+            max-width: 250px;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .instructions {
+            background: rgba(108, 99, 255, 0.1);
+            border: 1px solid #6c63ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .instructions h3 {
+            color: #6c63ff;
+            margin-bottom: 15px;
+        }
+
+        .instructions ol {
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .instructions li {
+            margin: 10px 0;
+            color: #ddd;
+        }
+
+        .payment-actions {
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6c63ff, #574dcf);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #574dcf, #4b45b1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #666, #555);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #555, #444);
+            transform: translateY(-2px);
+        }
+
+        .loading-animation {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #6c63ff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .payment-method-badge {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .amount-highlight {
+            font-size: 2rem;
+            color: #4CAF50;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .payment-container {
+                margin: 20px;
+                padding: 25px;
+            }
+            
+            .payment-detail {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .detail-label {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Incluir la Sidebar -->
-    <div class="col-auto">
-        <%- include('./partials/sidebar.ejs') %>
+    <div id="page-content-wrapper">
+        <!-- Incluir la Sidebar -->
+        <div class="col-auto">
+            <%- include('./partials/sidebar.ejs') %>
+        </div>
+        
+        <div class="col">
+            <div class="payment-container">
+                <div class="payment-header">
+                    <div class="status">
+                        <span class="loading-animation"></span>
+                        PAGO EN PROCESO
+                    </div>
+                    <h1>💳 ¡Pago Iniciado Exitosamente!</h1>
+                    <p>Tu solicitud de pago ha sido procesada correctamente</p>
+                </div>
+
+                <div class="payment-info">
+                    <h3>📋 Detalles del Pago</h3>
+                    
+                    <div class="payment-detail">
+                        <span class="detail-label">ID de Pago:</span>
+                        <span class="detail-value">
+                            <% if (typeof identificadorPago !== 'undefined') { %>
+                                #<%= identificadorPago %>
+                            <% } else { %>
+                                No disponible
+                            <% } %>
+                        </span>
+                    </div>
+
+                    <div class="payment-detail">
+                        <span class="detail-label">Monto:</span>
+                        <span class="detail-value amount-highlight">
+                            <% if (typeof monto !== 'undefined') { %>
+                                <%= monto %> Bs
+                            <% } else { %>
+                                No disponible
+                            <% } %>
+                        </span>
+                    </div>
+
+                    <div class="payment-detail">
+                        <span class="detail-label">Método de Pago:</span>
+                        <span class="detail-value">
+                            <span class="payment-method-badge">
+                                <% if (typeof metodoPago !== 'undefined') { %>
+                                    <% if (metodoPago === 'QR') { %>
+                                        📱 Código QR
+                                    <% } else if (metodoPago === 'Tigo Money') { %>
+                                        💰 Tigo Money
+                                    <% } else { %>
+                                        <%= metodoPago %>
+                                    <% } %>
+                                <% } else { %>
+                                    No especificado
+                                <% } %>
+                            </span>
+                        </span>
+                    </div>
+
+                    <div class="payment-detail">
+                        <span class="detail-label">Estado:</span>
+                        <span class="detail-value" style="color: #FFA500;">
+                            ⏳ Esperando confirmación
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Mostrar QR si está disponible -->
+                <% if (typeof imagenQR !== 'undefined' && imagenQR) { %>
+                    <div class="qr-section">
+                        <h2>📱 Escanea el Código QR</h2>
+                        <p>Usa tu aplicación de banca móvil para escanear el código:</p>
+                        
+                        <div class="qr-code">
+                            <img src="data:image/png;base64,<%= imagenQR %>" alt="Código QR para pago">
+                        </div>
+
+                        <div class="instructions">
+                            <h3>📝 Instrucciones:</h3>
+                            <ol>
+                                <li>Abre tu aplicación de banca móvil</li>
+                                <li>Selecciona la opción "Pagar con QR"</li>
+                                <li>Escanea el código QR mostrado arriba</li>
+                                <li>Confirma el monto: <strong><%= monto || '0' %> Bs</strong></li>
+                                <li>Autoriza el pago</li>
+                                <li>Espera la confirmación automática</li>
+                            </ol>
+                        </div>
+                    </div>
+                <% } else if (typeof metodoPago !== 'undefined' && metodoPago === 'Tigo Money') { %>
+                    <div class="qr-section">
+                        <h2>💰 Pago con Tigo Money</h2>
+                        <div class="instructions">
+                            <h3>📝 Instrucciones para Tigo Money:</h3>
+                            <ol>
+                                <li>Marca *555# desde tu teléfono Tigo</li>
+                                <li>Selecciona "Servicios de Pago"</li>
+                                <li>Busca "Render AI" o usa el código: <strong><%= identificadorPago || 'N/A' %></strong></li>
+                                <li>Confirma el monto: <strong><%= monto || '0' %> Bs</strong></li>
+                                <li>Ingresa tu PIN de Tigo Money</li>
+                                <li>Confirma la transacción</li>
+                            </ol>
+                        </div>
+                    </div>
+                <% } %>
+
+                <div class="payment-actions">
+                    <a href="/consultar-pago/<%= identificadorPago || '' %>" class="btn btn-primary">
+                        🔍 Consultar Estado
+                    </a>
+                    <a href="/dashboard" class="btn btn-secondary">
+                        🏠 Volver al Dashboard
+                    </a>
+                </div>
+
+                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 193, 7, 0.1); border-radius: 10px; border: 1px solid #FFC107;">
+                    <h4 style="color: #FFC107; margin-bottom: 10px;">⏰ Información Importante</h4>
+                    <p style="margin: 0; color: #ddd; font-size: 0.9rem;">
+                        • El pago puede tardar hasta 5 minutos en procesarse<br>
+                        • Mantén esta ventana abierta hasta recibir confirmación<br>
+                        • Si tienes problemas, contacta nuestro soporte
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-    <h1>¡Pago En Proceso!</h1>
-    <p>Tu pago esta sido procesado correctamente.</p>
 
-    <% if (qrImage) { %>
-        <h2>Escanea el siguiente código QR para completar el pago:</h2>
-        <img src="data:image/png;base64,<%= qrImage %>" alt="QR Code">
-        <% } %>
+    <script>
+        // Auto-refresh para consultar estado del pago
+        let checkInterval;
+        
+         if (typeof identificadorPago !== 'undefined' && identificadorPago) { 
+            // Verificar estado cada 10 segundos
+            checkInterval = setInterval(function() {
+                fetch('/consultar-pago/<%= identificadorPago %>')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exito && data.estadoPago) {
+                            if (data.estadoPago.toLowerCase().includes('completado')) {
+                                clearInterval(checkInterval);
+                                window.location.href = '/pago-exitoso';
+                            } else if (data.estadoPago.toLowerCase().includes('fallido')) {
+                                clearInterval(checkInterval);
+                                window.location.href = '/pago-fallido';
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.log('Error consultando estado:', error);
+                    });
+            }, 10000); // Cada 10 segundos
+        } 
 
-            <p>Gracias por tu pago. Tu ID de pago es <%= pagoId %>.</p>
+        // Limpiar interval si el usuario sale de la página
+        window.addEventListener('beforeunload', function() {
+            if (checkInterval) {
+                clearInterval(checkInterval);
+            }
+        });
+
+        // Mostrar tiempo transcurrido
+        let startTime = Date.now();
+        
+        setInterval(function() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            
+            const timeDisplay = document.querySelector('.loading-animation').parentElement;
+            if (timeDisplay) {
+                timeDisplay.innerHTML = `
+                    <span class="loading-animation"></span>
+                    PAGO EN PROCESO (${minutes}:${seconds.toString().padStart(2, '0')})
+                `;
+            }
+        }, 1000);
+
+        // Función para copiar ID de pago
+        function copyPaymentId() {
+             if (typeof identificadorPago !== 'undefined') { 
+                const paymentId = '<%= identificadorPago %>';
+                navigator.clipboard.writeText(paymentId).then(function() {
+                    alert('✅ ID de pago copiado: ' + paymentId);
+                });
+             } 
+        }
+
+        // Agregar click event al ID de pago para copiarlo
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentIdElement = document.querySelector('.detail-value');
+            if (paymentIdElement && paymentIdElement.textContent.includes('#')) {
+                paymentIdElement.style.cursor = 'pointer';
+                paymentIdElement.title = 'Click para copiar';
+                paymentIdElement.addEventListener('click', copyPaymentId);
+            }
+        });
+    </script>
 </body>
 
 </html>

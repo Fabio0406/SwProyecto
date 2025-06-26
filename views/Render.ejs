@@ -6,6 +6,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador Render</title>
     <link rel="icon" href="public/images/favicon.png">
+    <link rel="stylesheet" href="/public/css/styles2.css">
+    <style>
+        .container-render {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            color: #fff;
+            text-align: center;
+        }
+        
+        .render-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin: 20px 0;
+        }
+        
+        .render-info {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .parameter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .parameter-item {
+            background-color: #444;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .parameter-label {
+            font-weight: bold;
+            color: #b19cd9;
+            margin-bottom: 5px;
+        }
+        
+        .parameter-value {
+            font-size: 1.1em;
+            color: #fff;
+        }
+        
+        .cost-highlight {
+            font-size: 2em;
+            color: #4CAF50;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .download-btn {
+            background-color: #6c63ff;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin: 10px;
+        }
+        
+        .download-btn:hover {
+            background-color: #574dcf;
+        }
+    </style>
 </head>
 
 <body>
@@ -14,27 +87,115 @@
             <div class="row">
                 <!-- Incluir la Sidebar -->
                 <div class="col-auto">
-                    <%- include('./partials/sidebar.ejs') %> <!-- Asegúrate de que la sidebar esté bien configurada -->
+                    <%- include('./partials/sidebar.ejs') %>
                 </div>
+                
                 <!-- Contenido Principal -->
-                <div class="container-suscripcion">
-                    <h1>Felicidades Render Generado</h1>
-                    <br>
-                    <h3 class="subtitle">Imagen Generada:</h3>
-                    <br>
-                    <img src="<%= generatedImageUrl %>" alt="Imagen generada" style="max-width: 100%; height: auto;">
-                    <br>
-                    <h3 class="subtitle">Costo Estimado: <%= cost %>
-                    </h3>
-                    <br>
+                <div class="col">
+                    <div class="container-render">
+                        <h1>🎉 ¡Render Generado Exitosamente!</h1>
+                        
+                        <% if (typeof titulo !== 'undefined' && titulo) { %>
+                            <h2 class="subtitle">Proyecto: <%= titulo %></h2>
+                        <% } %>
+                        
+                        <!-- Imagen Generada -->
+                        <div class="render-section">
+                            <h3 class="subtitle">Imagen Generada:</h3>
+                            <% if (typeof imagenGenerada !== 'undefined' && imagenGenerada) { %>
+                                <img src="<%= imagenGenerada %>" alt="Render generado" class="render-image">
+                                <br>
+                                <button class="download-btn" onclick="downloadImage('<%= imagenGenerada %>')">
+                                    📥 Descargar Imagen
+                                </button>
+                            <% } else { %>
+                                <p>Error: No se pudo generar la imagen</p>
+                            <% } %>
+                        </div>
 
+                        <!-- Costo Estimado -->
+                        <div class="render-info">
+                            <h3 class="subtitle">💰 Costo Estimado:</h3>
+                            <% if (typeof costo !== 'undefined' && costo) { %>
+                                <div class="cost-highlight"><%= costo %></div>
+                            <% } else { %>
+                                <div class="cost-highlight">No disponible</div>
+                            <% } %>
+                        </div>
+
+                        <!-- Parámetros del Proyecto -->
+                        <% if (typeof parametros !== 'undefined' && parametros) { %>
+                            <div class="render-info">
+                                <h3 class="subtitle">📋 Parámetros del Proyecto:</h3>
+                                <div class="parameter-grid">
+                                    <% if (parametros.tamaño) { %>
+                                        <div class="parameter-item">
+                                            <div class="parameter-label">Tamaño:</div>
+                                            <div class="parameter-value"><%= parametros.tamaño %> m²</div>
+                                        </div>
+                                    <% } %>
+                                    
+                                    <% if (parametros.pisos) { %>
+                                        <div class="parameter-item">
+                                            <div class="parameter-label">Pisos:</div>
+                                            <div class="parameter-value"><%= parametros.pisos %></div>
+                                        </div>
+                                    <% } %>
+                                    
+                                    <% if (parametros.estilo) { %>
+                                        <div class="parameter-item">
+                                            <div class="parameter-label">Estilo:</div>
+                                            <div class="parameter-value"><%= parametros.estilo %></div>
+                                        </div>
+                                    <% } %>
+                                    
+                                    <% if (parametros.acabados) { %>
+                                        <div class="parameter-item">
+                                            <div class="parameter-label">Acabados:</div>
+                                            <div class="parameter-value"><%= parametros.acabados %></div>
+                                        </div>
+                                    <% } %>
+                                    
+                                    <% if (parametros.ambiente) { %>
+                                        <div class="parameter-item">
+                                            <div class="parameter-label">Ambiente:</div>
+                                            <div class="parameter-value"><%= parametros.ambiente %></div>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% } %>
+
+                        <!-- Acciones -->
+                        <div class="render-actions">
+                            <button class="download-btn" onclick="window.location.href='/renders'">
+                                🔄 Generar Otro Render
+                            </button>
+                            <button class="download-btn" onclick="window.location.href='/dashboard'">
+                                🏠 Volver al Dashboard
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <h1>Felicidades Render Generado</h1>
 
-
+    <script>
+        function downloadImage(imageSrc) {
+            if (!imageSrc) {
+                alert('Error: No hay imagen para descargar');
+                return;
+            }
+            
+            const link = document.createElement('a');
+            link.href = imageSrc;
+            link.download = imageSrc.split('/').pop() || 'render_generado.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
 </body>
 
 </html>

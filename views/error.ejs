@@ -1,14 +1,394 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="es">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página no encontrada</title>
-    <link rel="stylesheet" href="/public/styles.css">
-  </head>
-  <body>
-    <h1>Ups, ocurrió un error</h1>
-    <p>No existe la dirección que estás buscando.</p>
-    <a href="/">Volver al inicio</a>
-  </body>
+    <title>
+        <% if (typeof error !== 'undefined' && error) { %>
+            Error - <%= error %>
+        <% } else { %>
+            Error - Render AI
+        <% } %>
+    </title>
+    <link rel="icon" href="/public/images/favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .error-container {
+            max-width: 600px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .error-code {
+            font-size: 6rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .error-message {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .error-description {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .help-links {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .help-links h4 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .help-links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .help-links a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 30px 20px;
+            }
+            
+            .error-code {
+                font-size: 4rem;
+            }
+            
+            .error-title {
+                font-size: 1.5rem;
+            }
+            
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Formas flotantes para decoración -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="error-container">
+        <% 
+        // Determinar el tipo de error y mostrar contenido apropiado
+        let errorCode = '500';
+        let errorIcon = '🚨';
+        let errorTitle = 'Error Interno';
+        let errorMessage = 'Ha ocurrido un error inesperado';
+        let errorDescription = 'Lo sentimos, algo salió mal en nuestros servidores. Nuestro equipo ha sido notificado y está trabajando para solucionarlo.';
+        
+        if (typeof error !== 'undefined' && error) {
+            if (error.includes('404') || error.includes('no encontrad') || error.includes('not found')) {
+                errorCode = '404';
+                errorIcon = '🔍';
+                errorTitle = 'Página No Encontrada';
+                errorMessage = 'La página que buscas no existe';
+                errorDescription = 'La URL que has introducido no corresponde a ninguna página válida. Puede que haya sido movida o eliminada.';
+            } else if (error.includes('403') || error.includes('prohibid') || error.includes('forbidden')) {
+                errorCode = '403';
+                errorIcon = '🚫';
+                errorTitle = 'Acceso Prohibido';
+                errorMessage = 'No tienes permisos para acceder a este recurso';
+                errorDescription = 'No cuentas con los permisos necesarios para ver esta página. Si crees que esto es un error, contacta al administrador.';
+            } else if (error.includes('401') || error.includes('no autorizad') || error.includes('unauthorized')) {
+                errorCode = '401';
+                errorIcon = '🔐';
+                errorTitle = 'No Autorizado';
+                errorMessage = 'Necesitas iniciar sesión para continuar';
+                errorDescription = 'Esta página requiere que tengas una sesión activa. Por favor, inicia sesión para acceder al contenido.';
+            } else if (error.includes('timeout') || error.includes('tiempo') || error.includes('slow')) {
+                errorCode = '408';
+                errorIcon = '⏰';
+                errorTitle = 'Tiempo Agotado';
+                errorMessage = 'La solicitud tardó demasiado tiempo';
+                errorDescription = 'El servidor tardó más tiempo del esperado en responder. Esto puede deberse a una conexión lenta o alta carga del servidor.';
+            }
+        }
+        %>
+
+        <div class="error-icon"><%= errorIcon %></div>
+        
+        <div class="error-code"><%= errorCode %></div>
+        
+        <h1 class="error-title"><%= errorTitle %></h1>
+        
+        <p class="error-message">
+            <% if (typeof mensaje !== 'undefined' && mensaje) { %>
+                <%= mensaje %>
+            <% } else { %>
+                <%= errorMessage %>
+            <% } %>
+        </p>
+
+        <div class="error-description">
+            <% if (typeof error !== 'undefined' && error && error !== errorTitle) { %>
+                <strong>Detalles:</strong> <%= error %>
+                <br><br>
+            <% } %>
+            <%= errorDescription %>
+        </div>
+
+        <div class="buttons-container">
+            <a href="/" class="btn btn-primary">
+                🏠 Ir al Inicio
+            </a>
+            
+            <button onclick="window.history.back()" class="btn btn-secondary">
+                ⬅️ Volver Atrás
+            </button>
+            
+            <% if (errorCode === '401') { %>
+                <a href="/login" class="btn btn-primary">
+                    🔑 Iniciar Sesión
+                </a>
+            <% } %>
+            
+            <% if (errorCode === '404') { %>
+                <a href="/dashboard" class="btn btn-secondary">
+                    📊 Dashboard
+                </a>
+            <% } %>
+        </div>
+
+        <div class="help-links">
+            <h4>¿Necesitas ayuda?</h4>
+            <a href="/feedback">📝 Reportar Problema</a>
+            <a href="mailto:support@renderia.com">📧 Contacto</a>
+            <a href="/" onclick="location.reload()">🔄 Recargar Página</a>
+        </div>
+    </div>
+
+    <script>
+        // Agregar funcionalidad de recarga con delay
+        document.addEventListener('DOMContentLoaded', function() {
+            // Detectar si viene de un error de red
+            if (navigator.onLine === false) {
+                const errorContainer = document.querySelector('.error-description');
+                errorContainer.innerHTML = `
+                    <strong>⚠️ Sin Conexión a Internet</strong><br>
+                    Parece que no tienes conexión a internet. Verifica tu conexión y vuelve a intentarlo.
+                `;
+            }
+
+            // Auto-refresh para errores de servidor cada 30 segundos
+            if (window.location.search.includes('auto-refresh')) {
+                setTimeout(() => {
+                    location.reload();
+                }, 30000);
+            }
+        });
+
+        // Función para reportar el error automáticamente
+        function reportError() {
+            const errorInfo = {
+                url: window.location.href,
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+                referrer: document.referrer
+            };
+            
+            console.log('Error reportado:', errorInfo);
+            // Aquí podrías enviar el error a tu sistema de logging
+        }
+
+        // Detectar tipo de error y reportar si es necesario
+        if (errorCode === '500' || errorCode === '408') { 
+            reportError();
+        } 
+
+        // Shortcut de teclado para volver al inicio
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                window.location.href = '/';
+            }
+            if (e.key === 'Backspace' && !e.target.matches('input, textarea')) {
+                e.preventDefault();
+                window.history.back();
+            }
+        });
+    </script>
+</body>
 </html>

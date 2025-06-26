@@ -3,19 +3,399 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Pago Fallido</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Fallido - Render AI</title>
+    <link rel="icon" href="public/images/favicon.png">
+    <link rel="stylesheet" href="/public/css/styles2.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        #page-content-wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .payment-failed-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .failed-card {
+            background: linear-gradient(135deg, #2a1f1f, #3d2626);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid #ff6b6b;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .failed-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #ff8e8e, #ff6b6b);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .failed-icon {
+            font-size: 5rem;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .failed-title {
+            font-size: 2.5rem;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .failed-message {
+            font-size: 1.2rem;
+            color: #ddd;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .error-details {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid #ff6b6b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .error-details h3 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .error-details p {
+            color: #ccc;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6c63ff, #574dcf);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #574dcf, #4b45b1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #555, #777);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #777, #999);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(119, 119, 119, 0.4);
+        }
+
+        .btn-retry {
+            background: linear-gradient(135deg, #ff6b6b, #ff5252);
+            color: white;
+        }
+
+        .btn-retry:hover {
+            background: linear-gradient(135deg, #ff5252, #ff4444);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .support-info {
+            background: rgba(108, 99, 255, 0.1);
+            border: 1px solid #6c63ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .support-info h3 {
+            color: #6c63ff;
+            margin-bottom: 15px;
+        }
+
+        .support-info p {
+            color: #bbb;
+            margin: 8px 0;
+        }
+
+        .payment-id {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            color: #ffd700;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .failed-card {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .failed-title {
+                font-size: 2rem;
+            }
+
+            .failed-icon {
+                font-size: 4rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .actions {
+                flex-direction: row;
+                justify-content: center;
+            }
+
+            .btn {
+                flex: 1;
+                max-width: 200px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Incluir la Sidebar -->
-    <div class="col-auto">
-        <%- include('./partials/sidebar.ejs') %>
+    <div id="page-content-wrapper">
+        <!-- Incluir la Sidebar -->
+        <div class="col-auto">
+            <%- include('./partials/sidebar.ejs') %>
+        </div>
+        
+        <!-- Contenido Principal -->
+        <div class="payment-failed-container">
+            <div class="failed-card">
+                <div class="failed-icon">❌</div>
+                
+                <h1 class="failed-title">¡Pago Fallido!</h1>
+                
+                <div class="failed-message">
+                    Lo sentimos, ha ocurrido un error durante el procesamiento de tu pago.
+                </div>
+
+                <!-- Detalles del Error -->
+                <div class="error-details">
+                    <h3>📋 Detalles del Error:</h3>
+                    <% if (typeof error !== 'undefined' && error) { %>
+                        <p><strong>Error:</strong> <%= error %></p>
+                    <% } else { %>
+                        <p><strong>Error:</strong> No se pudo procesar la transacción</p>
+                    <% } %>
+                    
+                    <% if (typeof pagoId !== 'undefined' && pagoId) { %>
+                        <p><strong>ID de Transacción:</strong></p>
+                        <div class="payment-id"><%= pagoId %></div>
+                    <% } %>
+                    
+                    <p><strong>Fecha y Hora:</strong> <%= new Date().toLocaleString('es-ES') %></p>
+                </div>
+
+                <!-- Posibles Causas -->
+                <div class="error-details">
+                    <h3>🔍 Posibles Causas:</h3>
+                    <p>• Fondos insuficientes en la cuenta</p>
+                    <p>• Problemas de conectividad con el banco</p>
+                    <p>• Datos de pago incorrectos</p>
+                    <p>• Transacción cancelada por el usuario</p>
+                    <p>• Problemas temporales del servicio</p>
+                </div>
+
+                <!-- Acciones -->
+                <div class="actions">
+                    <a href="/pagofacil" class="btn btn-retry">
+                        🔄 Intentar Nuevamente
+                    </a>
+                    
+                    <a href="/suscripcion" class="btn btn-secondary">
+                        ← Volver a Planes
+                    </a>
+                    
+                    <a href="/dashboard" class="btn btn-primary">
+                        🏠 Ir al Dashboard
+                    </a>
+                </div>
+
+                <!-- Información de Soporte -->
+                <div class="support-info">
+                    <h3>🆘 ¿Necesitas Ayuda?</h3>
+                    <p><strong>📧 Email:</strong> soporte@renderai.com</p>
+                    <p><strong>📱 WhatsApp:</strong> +591 7XXXXXXX</p>
+                    <p><strong>🕒 Horario:</strong> Lunes a Viernes, 9:00 - 18:00</p>
+                    <p><strong>⏱️ Tiempo de respuesta:</strong> Menos de 24 horas</p>
+                </div>
+
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #444;">
+                    <p style="color: #888; font-size: 0.9rem;">
+                        💡 <strong>Tip:</strong> Si el problema persiste, intenta usar un método de pago diferente
+                        o contacta con tu banco para verificar que no haya restricciones en tu cuenta.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-    <h1>¡Hubo un error con tu pago!</h1>
-    <p>
-        <%= error %>
-    </p>
-    <p>Por favor, intenta de nuevo o contacta al soporte si el problema persiste.</p>
+
+    <script>
+        // Auto-refresh para verificar estado del pago si hay pagoId
+        if (typeof pagoId !== 'undefined' && pagoId) { 
+            let checkCount = 0;
+            const maxChecks = 3;
+            
+            function checkPaymentStatus() {
+                if (checkCount >= maxChecks) return;
+                
+                fetch('/consultar-pago/<%= pagoId %>')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exito && data.estadoPago && data.estadoPago.toLowerCase().includes('completado')) {
+                            // Pago completado exitosamente
+                            window.location.href = '/pago-exitoso';
+                        }
+                    })
+                    .catch(error => {
+                        console.log('Error verificando estado del pago:', error);
+                    });
+                
+                checkCount++;
+            }
+            
+            // Verificar estado cada 10 segundos por 3 veces
+            setTimeout(checkPaymentStatus, 10000);
+            setTimeout(checkPaymentStatus, 20000);
+            setTimeout(checkPaymentStatus, 30000);
+         } 
+
+        // Efecto de animación para los botones
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.btn');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Crear efecto ripple
+                    const ripple = document.createElement('span');
+                    ripple.style.position = 'absolute';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+                    ripple.style.transform = 'scale(0)';
+                    ripple.style.animation = 'ripple 0.6s linear';
+                    ripple.style.left = (e.clientX - button.offsetLeft) + 'px';
+                    ripple.style.top = (e.clientY - button.offsetTop) + 'px';
+                    
+                    button.style.position = 'relative';
+                    button.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+        });
+
+        // CSS para el efecto ripple
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Log del error para debugging (solo en desarrollo)
+         if (typeof error !== 'undefined' && error) { 
+            console.log('Error de pago:', '<%= error %>');
+         } 
+    </script>
 </body>
 
 </html>

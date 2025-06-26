@@ -1,16 +1,37 @@
 {
-  "name": "render2d_project",
+  "name": "render-ai",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Generador automatizado de renders arquitectónicos con IA - Plataforma que transforma bocetos 2D en renders profesionales mediante inteligencia artificial",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "validate": "npm run lint && npm run test"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "render",
+    "arquitectura",
+    "inteligencia-artificial",
+    "renders-3d",
+    "bocetos-2d",
+    "nodejs",
+    "express",
+    "mongodb",
+    "replicate-ai",
+    "construccion",
+    "visualizacion"
+  ],
+  "author": {
+    "name": "Fabio André Arredondo Mendieta",
+    "email": "fabio.arredondo@visualmind.bo",
+    "company": "VisualMind Technologies"
+  },
+  "license": "MIT",
   "dependencies": {
     "axios": "^1.7.8",
     "bcryptjs": "^2.4.3",
@@ -18,11 +39,81 @@
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
+    "express-rate-limit": "^7.5.1",
     "express-session": "^1.18.1",
+    "express-validator": "^7.2.1",
+    "helmet": "^7.2.0",
     "mongoose": "^8.7.2",
     "multer": "^1.4.5-lts.1",
-    "nodemon": "^3.1.7",
     "qrcode": "^1.5.4",
     "replicate": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.6.0",
+    "supertest": "^6.3.4"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/visualmind-technologies/render-ai.git"
+  },
+  "homepage": "https://render-ai.visualmind.bo",
+  "bugs": {
+    "url": "https://github.com/visualmind-technologies/render-ai/issues"
+  },
+  "config": {
+    "mongodbMemoryServer": {
+      "version": "latest"
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "**/*.js",
+      "!node_modules/**",
+      "!coverage/**",
+      "!public/**"
+    ],
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ]
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "es2021": true,
+      "jest": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:node/recommended",
+      "prettier"
+    ],
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-console": "warn",
+      "no-unused-vars": "error",
+      "node/no-unsupported-features/es-syntax": "off"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "printWidth": 100
   }
 }

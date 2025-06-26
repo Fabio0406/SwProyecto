@@ -3,32 +3,458 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Pago Exitoso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Exitoso - Render AI</title>
+    <link rel="icon" href="public/images/favicon.png">
+    <link rel="stylesheet" href="/public/css/styles2.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .success-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .success-header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+            animation: slideInUp 0.6s ease;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 1s ease infinite alternate;
+        }
+
+        .success-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .success-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .payment-details {
+            background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid #444;
+        }
+
+        .payment-details h2 {
+            color: #b19cd9;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            text-align: left;
+        }
+
+        .detail-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #6c63ff;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #b19cd9;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            color: #fff;
+            word-break: break-word;
+        }
+
+        .premium-benefits {
+            background: linear-gradient(135deg, #6c63ff, #574dcf);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.3);
+        }
+
+        .premium-benefits h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .benefits-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            text-align: left;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .benefit-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            min-width: 180px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6c63ff, #574dcf);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #574dcf, #4b45b1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 10px;
+        }
+
+        /* Animaciones */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        .fade-in {
+            animation: slideInUp 0.8s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .success-title {
+                font-size: 2rem;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Incluir la Sidebar -->
-    <div class="col-auto">
-        <%- include('./partials/sidebar.ejs') %>
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Incluir la Sidebar -->
+                <div class="col-auto">
+                    <%- include('./partials/sidebar.ejs') %>
+                </div>
+                
+                <!-- Contenido Principal -->
+                <div class="col">
+                    <div class="success-container">
+                        <!-- Header de Éxito -->
+                        <div class="success-header">
+                            <div class="success-icon">🎉</div>
+                            <h1 class="success-title">¡Pago Exitoso!</h1>
+                            <p class="success-subtitle">
+                                ¡Felicidades! Tu suscripción Premium ha sido activada correctamente.
+                            </p>
+                            <% if (typeof mensaje !== 'undefined' && mensaje) { %>
+                                <p class="success-subtitle">
+                                    <%= mensaje %>
+                                </p>
+                            <% } %>
+                        </div>
+
+                        <!-- Detalles del Pago -->
+                        <div class="payment-details fade-in">
+                            <h2>📋 Detalles de la Transacción</h2>
+                            <div class="details-grid">
+                                <% if (typeof pago !== 'undefined' && pago) { %>
+                                    <div class="detail-item">
+                                        <div class="detail-label">ID de Transacción</div>
+                                        <div class="detail-value">
+                                            #<%= pago.identificador || pago._id || 'N/A' %>
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-item">
+                                        <div class="detail-label">Estado del Pago</div>
+                                        <div class="detail-value">
+                                            <span class="status-badge">
+                                                <%= pago.estado === 'completado' ? 'COMPLETADO' : (pago.estado || 'PROCESADO') %>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <% if (pago.fechaPago) { %>
+                                        <div class="detail-item">
+                                            <div class="detail-label">Fecha del Pago</div>
+                                            <div class="detail-value">
+                                                <%= new Date(pago.fechaPago).toLocaleString('es-ES', {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                }) %>
+                                            </div>
+                                        </div>
+                                    <% } %>
+
+                                    <% if (pago.monto) { %>
+                                        <div class="detail-item">
+                                            <div class="detail-label">Monto Pagado</div>
+                                            <div class="detail-value">
+                                                <strong>$<%= pago.monto %> USD</strong>
+                                            </div>
+                                        </div>
+                                    <% } %>
+
+                                    <% if (pago.metodoPago) { %>
+                                        <div class="detail-item">
+                                            <div class="detail-label">Método de Pago</div>
+                                            <div class="detail-value">
+                                                <%= pago.metodoPago === 'QR' ? '📱 Código QR' : 
+                                                    pago.metodoPago === 'TigoMoney' ? '💳 Tigo Money' : 
+                                                    pago.metodoPago %>
+                                            </div>
+                                        </div>
+                                    <% } %>
+
+                                    <% if (pago.correoElectronico) { %>
+                                        <div class="detail-item">
+                                            <div class="detail-label">Correo de Confirmación</div>
+                                            <div class="detail-value">
+                                                <%= pago.correoElectronico %>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                <% } else { %>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Estado</div>
+                                        <div class="detail-value">
+                                            <span class="status-badge">COMPLETADO</span>
+                                        </div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Información</div>
+                                        <div class="detail-value">
+                                            Pago procesado exitosamente
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <!-- Beneficios Premium -->
+                        <div class="premium-benefits fade-in">
+                            <h3>🌟 ¡Bienvenido a Render AI Premium!</h3>
+                            <p style="margin-bottom: 25px; font-size: 1.1rem;">
+                                Ahora tienes acceso completo a todas nuestras funcionalidades premium:
+                            </p>
+                            <div class="benefits-list">
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">🚀</span>
+                                    <span>Renders ilimitados de alta calidad</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">🎨</span>
+                                    <span>Estilos arquitectónicos exclusivos</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">⚡</span>
+                                    <span>Procesamiento prioritario y más rápido</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">💎</span>
+                                    <span>Resolución 4K y exportación premium</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">📊</span>
+                                    <span>Estimaciones de costo más precisas</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">🎥</span>
+                                    <span>Generación de videos promocionales</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">📞</span>
+                                    <span>Soporte técnico prioritario</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <span class="benefit-icon">☁️</span>
+                                    <span>Almacenamiento en la nube expandido</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="action-buttons">
+                            <a href="/renders" class="btn btn-primary">
+                                <span>🎨</span>
+                                Crear mi primer render premium
+                            </a>
+                            <a href="/dashboard" class="btn btn-secondary">
+                                <span>🏠</span>
+                                Ir al Dashboard
+                            </a>
+                        </div>
+
+                        <!-- Información Adicional -->
+                        <div style="margin-top: 40px; padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; text-align: center;">
+                            <p style="margin: 0; color: #bbb;">
+                                🔒 Tu suscripción es válida por 1 año a partir de hoy.<br>
+                                📧 Recibirás un correo de confirmación con todos los detalles.<br>
+                                💬 ¿Tienes preguntas? Visita nuestro <a href="/feedback" style="color: #6c63ff;">centro de soporte</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <h1>¡Pago Exitoso!</h1>
-    <p>Gracias por tu pago, tu suscripción ha sido activada.</p>
-    <p>Detalles del pago:</p>
-    <ul>
-        <li><strong>ID de pago:</strong>
-            <%= pago.id %>
-        </li>
-        <li><strong>Fecha del pago:</strong>
-            <%= pago.fechapago %>
-        </li>
-        <li><strong>Estado del pago:</strong>
-            <%= pago.estado %>
-        </li>
-        <li><strong>Usuario:</strong>
-            <%= user.nombre %>
-        </li>
-    </ul>
-    <p>Ahora tienes una cuenta premium y acceso completo a nuestros servicios.</p>
+
+    <script>
+        // Efectos de animación al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animación de los elementos fade-in
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((element, index) => {
+                setTimeout(() => {
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(20px)';
+                    element.style.transition = 'all 0.6s ease';
+                    
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 200);
+            });
+
+            // Confetti effect (opcional)
+            if (typeof confetti !== 'undefined') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        });
+
+        // Auto-redirect después de 60 segundos (opcional)
+        let countdown = 60;
+        const redirectTimer = setInterval(() => {
+            countdown--;
+            if (countdown <= 0) {
+                clearInterval(redirectTimer);
+                window.location.href = '/dashboard';
+            }
+        }, 1000);
+
+        // Limpiar timer si el usuario navega manualmente
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') {
+                clearInterval(redirectTimer);
+            }
+        });
+    </script>
 </body>
 
 </html>

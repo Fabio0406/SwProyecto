@@ -1,62 +1,468 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <title>Perfil</title>
-        <meta name="viewport" content="user-scalable=no, width=device,with" charset="utf-8">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-        <link rel="stylesheet" type="text/css" href="public/css/sidebar.css">
-        <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
-        <link rel="stylesheet" href="/public/css/styles2.css">
+<head>
+    <title>Crear Renders - Render AI</title>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1" charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="public/css/sidebar.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/public/css/styles2.css">
+    <link rel="icon" href="public/images/favicon.png">
 
-        <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
-        <script type="text/javascript" src="public/js/jquery.js"></script>
-        <script type="text/javascript" src="public/js/sidebar.js"></script>
-        
-    </head>
-    <body>
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <!-- Incluir la Sidebar -->
-                    <div class="col-auto">
-                        <%- include('./partials/sidebar.ejs') %> <!-- Asegúrate de que la sidebar esté bien configurada -->
-                    </div>
-                    <!-- Contenido Principal -->
-                    <div class="col">
-                        <h1>Sube tu Boceto y Calcula el Costo</h1>
+    <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="public/js/jquery.js"></script>
+    <script type="text/javascript" src="public/js/sidebar.js"></script>
+    
+    <style>
+        .render-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
 
-                        <!-- Formulario para subir boceto y estimar costos -->
-                        <form action="/process" method="post" enctype="multipart/form-data" class="form-profile">
-                            <label for="image">Sube tu boceto:</label>
-                            <input type="file" id="image" name="image" accept="image/*" required>
-                            <br><br>
+        .render-container h1 {
+            text-align: center;
+            color: #b19cd9;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
 
-                            <label for="size">Tamaño en metros cuadrados:</label>
-                            <input type="number" id="size" name="size" placeholder="Ejemplo: 150" required>
-                            <br><br>
+        .form-profile {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-                            <label for="floors">Número de pisos:</label>
-                            <select id="floors" name="floors" required>
-                            <option value="1">1 Piso</option>
-                            <option value="2">2 Pisos</option>
-                            <option value="3">3 Pisos</option>
-                            </select>
-                            <br><br>
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
 
-                            <label for="finish">Tipo de acabados:</label>
-                            <select id="finish" name="finish" required>
-                            <option value="economicos">Económicos</option>
-                            <option value="medios">Medios</option>
-                            <option value="premium">Premium</option>
-                            </select>
-                            <br><br>
+        .form-group label {
+            color: #bbb;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
 
-                            <button type="submit">Generar Imagen y Calcular Costo</button>
-                        </form>
+        .form-group input,
+        .form-group select {
+            padding: 12px 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #333;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #6c63ff;
+            box-shadow: 0 0 10px rgba(108, 99, 255, 0.3);
+        }
+
+        .form-group input::placeholder {
+            color: #888;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #666;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background-color: #2a2a2a;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .file-upload-area:hover {
+            border-color: #6c63ff;
+            background-color: #333;
+        }
+
+        .file-upload-area.dragover {
+            border-color: #6c63ff;
+            background-color: rgba(108, 99, 255, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #bbb;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .preview-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #6c63ff, #574dcf);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #574dcf, #4b45b1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .info-section {
+            background: rgba(108, 99, 255, 0.1);
+            border: 1px solid #6c63ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-section h3 {
+            color: #6c63ff;
+            margin-bottom: 10px;
+        }
+
+        .info-section p {
+            color: #ccc;
+            margin: 5px 0;
+        }
+
+        .error-message {
+            background-color: #2a1f1f;
+            color: #ff6b6b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .success-message {
+            background-color: #1f2a1f;
+            color: #4CAF50;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .render-container {
+                margin: 10px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Incluir la Sidebar -->
+                <div class="col-auto">
+                    <%- include('./partials/sidebar.ejs') %>
+                </div>
+                
+                <!-- Contenido Principal -->
+                <div class="col">
+                    <div class="render-container">
+                        <h1>🎨 Crear Nuevo Render</h1>
+
+                        <!-- Mostrar mensajes de error o éxito -->
+                        <% if (typeof error !== 'undefined' && error) { %>
+                            <div class="error-message">
+                                <strong>❌ Error:</strong> <%= error %>
+                            </div>
+                        <% } %>
                         
+                        <% if (typeof exito !== 'undefined' && exito) { %>
+                            <div class="success-message">
+                                <strong>✅ Éxito:</strong> <%= exito %>
+                            </div>
+                        <% } %>
+
+                        <!-- Información sobre el proceso -->
+                        <div class="info-section">
+                            <h3>📋 Cómo funciona</h3>
+                            <p>• Sube un boceto de tu proyecto arquitectónico</p>
+                            <p>• Completa los detalles del proyecto (tamaño, estilo, acabados)</p>
+                            <p>• Nuestra IA generará un render profesional y calculará el costo estimado</p>
+                            <p>• Descarga tu render y utilízalo en tus presentaciones</p>
+                        </div>
+
+                        <!-- Formulario principal -->
+                        <form action="/process" method="post" enctype="multipart/form-data" class="form-profile" id="renderForm">
+                            
+                            <!-- Subida de archivo -->
+                            <div class="form-group">
+                                <label for="imagen">📁 Sube tu boceto:</label>
+                                <div class="file-upload-area" id="fileUploadArea">
+                                    <div class="upload-icon">📁</div>
+                                    <div class="upload-text">Haz clic aquí o arrastra tu boceto</div>
+                                    <div class="upload-subtext">Formatos soportados: JPG, PNG, GIF (Máx. 10MB)</div>
+                                    <input type="file" id="imagen" name="imagen" accept="image/*" required style="display: none;">
+                                </div>
+                                <div class="preview-container" id="previewContainer" style="display: none;">
+                                    <img id="previewImage" class="preview-image" alt="Vista previa del boceto">
+                                </div>
+                            </div>
+
+                            <!-- Título del proyecto -->
+                            <div class="form-group">
+                                <label for="titulo">📝 Título del proyecto:</label>
+                                <input type="text" id="titulo" name="titulo" placeholder="Ej: Casa moderna familiar" required>
+                            </div>
+
+                            <!-- Fila de especificaciones básicas -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="tamaño">📐 Tamaño en metros cuadrados:</label>
+                                    <input type="number" id="tamaño" name="tamaño" placeholder="150" min="1" max="10000" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="pisos">🏢 Número de pisos:</label>
+                                    <select id="pisos" name="pisos" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="1">1 Piso</option>
+                                        <option value="2">2 Pisos</option>
+                                        <option value="3">3 Pisos</option>
+                                        <option value="4">4 Pisos</option>
+                                        <option value="5">5+ Pisos</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Fila de estilo y ambiente -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="estilo">🎨 Estilo arquitectónico:</label>
+                                    <select id="estilo" name="estilo" required>
+                                        <option value="">Seleccionar estilo...</option>
+                                        <option value="internacional">Económico</option>
+                                        <option value="clasico">Clásico</option>
+                                        <option value="moderno">Moderno</option>
+                                        <option value="contemporaneo">Contemporáneo</option>
+                                        <option value="minimalista">Minimalista</option>
+                                        <option value="industrial">Industrial</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ambiente">🌿 Entorno:</label>
+                                    <select id="ambiente" name="ambiente" required>
+                                        <option value="">Seleccionar entorno...</option>
+                                        <option value="clean">Limpio</option>
+                                        <option value="urban">Urbano</option>
+                                        <option value="natural">Natural</option>
+                                        <option value="luxurious">Lujoso</option>
+                                        <option value="rustic">Rústico</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Tipo de acabados -->
+                            <div class="form-group">
+                                <label for="acabados">✨ Tipo de acabados:</label>
+                                <select id="acabados" name="acabados" required>
+                                    <option value="">Seleccionar acabados...</option>
+                                    <option value="economicos">Económicos</option>
+                                    <option value="medios">Medios</option>
+                                    <option value="premium">Premium</option>
+                                    <option value="lujo">Lujo</option>
+                                </select>
+                            </div>
+
+                            <!-- Botón de envío -->
+                            <button type="submit" class="submit-btn" id="submitBtn">
+                                🎨 Generar Render y Calcular Costo
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+
+    <script>
+        // Elementos del DOM
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileInput = document.getElementById('imagen');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const form = document.getElementById('renderForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Eventos de drag and drop
+        fileUploadArea.addEventListener('click', () => fileInput.click());
+        
+        fileUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+        
+        fileUploadArea.addEventListener('dragleave', () => {
+            fileUploadArea.classList.remove('dragover');
+        });
+        
+        fileUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelect();
+            }
+        });
+
+        // Manejar selección de archivo
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleFileSelect() {
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+
+            // Validar tipo de archivo
+            if (!file.type.startsWith('image/')) {
+                alert('❌ Por favor, selecciona un archivo de imagen válido.');
+                fileInput.value = '';
+                return;
+            }
+
+            // Validar tamaño (10MB máximo)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('❌ El archivo es demasiado grande. El tamaño máximo es 10MB.');
+                fileInput.value = '';
+                return;
+            }
+
+            // Mostrar vista previa
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewContainer.style.display = 'block';
+                
+                // Actualizar área de upload
+                fileUploadArea.innerHTML = `
+                    <div class="upload-icon">✅</div>
+                    <div class="upload-text">Archivo cargado: ${file.name}</div>
+                    <div class="upload-subtext">Haz clic para cambiar</div>
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Validación del formulario
+        form.addEventListener('submit', function(e) {
+            const titulo = document.getElementById('titulo').value.trim();
+            const tamaño = document.getElementById('tamaño').value;
+            const pisos = document.getElementById('pisos').value;
+            const estilo = document.getElementById('estilo').value;
+            const ambiente = document.getElementById('ambiente').value;
+            const acabados = document.getElementById('acabados').value;
+
+            // Validaciones
+            if (!fileInput.files[0]) {
+                e.preventDefault();
+                alert('❌ Por favor, sube una imagen del boceto.');
+                return;
+            }
+
+            if (!titulo) {
+                e.preventDefault();
+                alert('❌ Por favor, ingresa un título para el proyecto.');
+                return;
+            }
+
+            if (!tamaño || tamaño <= 0) {
+                e.preventDefault();
+                alert('❌ Por favor, ingresa un tamaño válido en metros cuadrados.');
+                return;
+            }
+
+            if (!pisos || !estilo || !ambiente || !acabados) {
+                e.preventDefault();
+                alert('❌ Por favor, completa todos los campos requeridos.');
+                return;
+            }
+
+            // Mostrar estado de carga
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '⏳ Generando render...';
+            
+            // Mensaje adicional después de 3 segundos
+            setTimeout(() => {
+                if (submitBtn.disabled) {
+                    submitBtn.innerHTML = '🎨 Procesando con IA...';
+                }
+            }, 3000);
+        });
+
+        // Tooltips para los campos
+        const tooltips = {
+            'tamaño': 'Ingresa el área total de construcción en metros cuadrados',
+            'pisos': 'Selecciona el número de niveles de la construcción',
+            'estilo': 'Elige el estilo arquitectónico que mejor describa tu proyecto',
+            'ambiente': 'Define el entorno donde se ubicará la construcción',
+            'acabados': 'Selecciona el nivel de acabados deseado'
+        };
+
+        // Agregar tooltips
+        Object.keys(tooltips).forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.title = tooltips[id];
+            }
+        });
+    </script>
+</body>
 </html>

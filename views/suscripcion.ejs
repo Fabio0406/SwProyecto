@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suscripciones - Render AI</title>
-    <meta name="viewport" content="user-scalable=no, width=device,with" charset="utf-8">
+    <link rel="icon" href="public/images/favicon.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="public/css/sidebar.css">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
@@ -13,6 +13,279 @@
     <script src="https://kit.fontawesome.com/41bcea2ae3.js" crossorigin="anonymous"></script>
     <script type="text/javascript" src="public/js/jquery.js"></script>
     <script type="text/javascript" src="public/js/sidebar.js"></script>
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container-suscripcion {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .container-suscripcion h1 {
+            font-size: 3.5rem;
+            text-align: center;
+            background: linear-gradient(45deg, #6c63ff, #b19cd9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(108, 99, 255, 0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            color: #ccc;
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin: 50px 0;
+        }
+
+        .plan {
+            background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 2px solid #333;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(108, 99, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .plan:hover::before {
+            left: 100%;
+        }
+
+        .plan:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(108, 99, 255, 0.2);
+            border-color: #6c63ff;
+        }
+
+        .plan.premium {
+            border-color: #FFD700;
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.2);
+        }
+
+        .plan.premium::after {
+            content: '⭐ RECOMENDADO';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .plan h2 {
+            font-size: 2.2rem;
+            color: #b19cd9;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .plan.premium h2 {
+            color: #FFD700;
+        }
+
+        .plan-price {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .plan-price .price-amount {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #6c63ff;
+        }
+
+        .plan.premium .plan-price .price-amount {
+            color: #FFD700;
+        }
+
+        .plan-price .price-period {
+            font-size: 1rem;
+            color: #888;
+            margin-left: 5px;
+        }
+
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 30px 0;
+        }
+
+        .plan-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-features li::before {
+            content: '✅';
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .plan-features li.not-included::before {
+            content: '❌';
+        }
+
+        .plan-footer {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .plan-footer button {
+            background: linear-gradient(135deg, #6c63ff, #574dcf);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan.premium .plan-footer button {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+        }
+
+        .plan-footer button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.4);
+        }
+
+        .plan.premium .plan-footer button:hover {
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .plan-footer button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .benefits {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 20px;
+            padding: 50px 40px;
+            margin: 60px 0;
+            text-align: center;
+            border: 1px solid #333;
+        }
+
+        .benefits h2 {
+            font-size: 2.5rem;
+            color: #b19cd9;
+            margin-bottom: 30px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .benefit-item {
+            background: rgba(108, 99, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(108, 99, 255, 0.3);
+        }
+
+        .benefit-item h3 {
+            color: #6c63ff;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .benefit-item p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .current-plan-notice {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .upgrade-notice {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container-suscripcion h1 {
+                font-size: 2.5rem;
+            }
+            
+            .plans {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .plan {
+                padding: 30px 20px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -21,54 +294,198 @@
             <div class="row">
                 <!-- Incluir la Sidebar -->
                 <div class="col-auto">
-                    <%- include('./partials/sidebar.ejs') %> <!-- Asegúrate de que la sidebar esté bien configurada -->
+                    <%- include('./partials/sidebar.ejs') %>
                 </div>
+                
                 <!-- Contenido Principal -->
+                <div class="col">
                     <div class="container-suscripcion">
-                        <h1>Elige tu Plan</h1>
-                    <br>
-                    <h3 class="subtitle">Obtén acceso a herramientas avanzadas para generar renders y personalizar tus bocetos.</h3>
-                    <br>
-                    <div class="plans">
-                        <!-- Plan Gratuito -->
-                        <div class="plan">
-                            <h2>Gratuito</h2>
-                            <p class="plan-price">US$0<span>/año</span></p>
-                            <ul class="plan-features">
-                                <li>Subir imágenes y bocetos</li>
-                                <li>Generar hasta 5 renders máximo</li>
-                                <li>Editar bocetos cargados</li>
-                                <li>Acceso limitado a funcionalidades</li>
-                            </ul>
-                            <div class="plan-footer">
-                                <button>Seleccionar Plan Gratuito</button>
+                        <h1>🚀 Elige tu Plan</h1>
+                        <p class="subtitle">Obtén acceso a herramientas avanzadas para generar renders profesionales y personalizar tus bocetos con la mejor tecnología de IA.</p>
+                        
+                        <!-- Mostrar estado actual del usuario -->
+                        <% if (typeof usuario !== 'undefined') { %>
+                            <% if (usuario.esPremium) { %>
+                                <div class="current-plan-notice">
+                                    ⭐ ¡Felicidades! Actualmente tienes una suscripción Premium activa
+                                </div>
+                            <% } else { %>
+                                <div class="upgrade-notice">
+                                    📊 Cuenta Gratuita - Renders utilizados: <%= usuario.rendersGratuitos || 0 %> de 3
+                                </div>
+                            <% } %>
+                        <% } %>
+
+                        <div class="plans">
+                            <!-- Plan Gratuito -->
+                            <div class="plan">
+                                <h2>💫 Gratuito</h2>
+                                <div class="plan-price">
+                                    <span class="price-amount">$0</span>
+                                    <span class="price-period">/siempre</span>
+                                </div>
+                                <ul class="plan-features">
+                                    <li>Subir imágenes y bocetos</li>
+                                    <li>Generar hasta 3 renders máximo</li>
+                                    <li>Editar bocetos cargados</li>
+                                    <li>Resolución estándar (720p)</li>
+                                    <li>Estimación básica de costos</li>
+                                    <li class="not-included">Renders ilimitados</li>
+                                    <li class="not-included">Resolución 4K</li>
+                                    <li class="not-included">Estilos premium</li>
+                                    <li class="not-included">Soporte prioritario</li>
+                                </ul>
+                                <div class="plan-footer">
+                                    <% if (typeof usuario !== 'undefined' && !usuario.esPremium) { %>
+                                        <button disabled>✅ Plan Actual</button>
+                                    <% } else if (typeof usuario !== 'undefined' && usuario.esPremium) { %>
+                                        <button disabled>⬇️ Downgrade no disponible</button>
+                                    <% } else { %>
+                                        <button onclick="window.location.href='/register'">
+                                            📝 Crear Cuenta Gratuita
+                                        </button>
+                                    <% } %>
+                                </div>
+                            </div>
+
+                            <!-- Plan Premium -->
+                            <div class="plan premium">
+                                <h2>⭐ Premium</h2>
+                                <div class="plan-price">
+                                    <span class="price-amount">390</span>
+                                    <span style="font-size: 1.5rem; color: #FFD700;">Bs</span>
+                                    <span class="price-period">/año</span>
+                                </div>
+                                <ul class="plan-features">
+                                    <li>Todo lo del plan gratuito</li>
+                                    <li>Renders ilimitados</li>
+                                    <li>Resolución hasta 4K</li>
+                                    <li>Estilos arquitectónicos exclusivos</li>
+                                    <li>Estimación avanzada de costos</li>
+                                    <li>Generador de videos (próximamente)</li>
+                                    <li>Exportación en múltiples formatos</li>
+                                    <li>Soporte técnico prioritario</li>
+                                    <li>Sin marca de agua</li>
+                                </ul>
+                                <div class="plan-footer">
+                                    <% if (typeof usuario !== 'undefined' && usuario.esPremium) { %>
+                                        <button disabled>✅ Plan Actual Activo</button>
+                                    <% } else { %>
+                                        <button onclick="initiatePremiumUpgrade()">
+                                            🚀 Comenzar Prueba Premium
+                                        </button>
+                                    <% } %>
+                                </div>
                             </div>
                         </div>
-                        <!-- Plan Premium -->
-                        <div class="plan">
-                            <h2>Premium</h2>
-                            <p class="plan-price">390 bs<span>/año</span></p>
-                            <ul class="plan-features">
-                                <li>Subir imágenes y bocetos</li>
-                                <li>Generar renders ilimitados</li>
-                                <li>Editar y personalizar bocetos</li>
-                                <li>Acceso completo a todas las funcionalidades</li>
-                            </ul>
-                            <div class="plan-footer">                                
-                                <a href="/pagofasil"><button>Comenzar Prueba Premium</button></a>
-                            </div>
-                        </div>
-                    </div>
+
+                        <!-- Beneficios Detallados -->
                         <div class="benefits">
-                            <h2>¿Por qué elegir Render AI?</h2>
-                            <p>✔ Genera renders de alta calidad basados en bocetos.</p>
-                            <p>✔ Acceso a herramientas avanzadas de personalización.</p>
-                            <p>✔ Soporte técnico dedicado para usuarios premium.</p>
+                            <h2>🎯 ¿Por qué elegir Render AI?</h2>
+                            <div class="benefits-grid">
+                                <div class="benefit-item">
+                                    <h3>🎨 Calidad Superior</h3>
+                                    <p>Genera renders de alta calidad con tecnología de inteligencia artificial de última generación, obteniendo resultados fotorealistas en segundos.</p>
+                                </div>
+                                <div class="benefit-item">
+                                    <h3>⚡ Velocidad Incomparable</h3>
+                                    <p>Convierte bocetos en renders profesionales en menos de 30 segundos, ahorrando horas de trabajo manual tradicional.</p>
+                                </div>
+                                <div class="benefit-item">
+                                    <h3>💰 Estimación Precisa</h3>
+                                    <p>Obtén estimaciones de costos de construcción automáticas y precisas basadas en materiales y precios del mercado local boliviano.</p>
+                                </div>
+                                <div class="benefit-item">
+                                    <h3>🛠️ Herramientas Avanzadas</h3>
+                                    <p>Acceso a herramientas de personalización avanzadas, múltiples estilos arquitectónicos y opciones de exportación.</p>
+                                </div>
+                                <div class="benefit-item">
+                                    <h3>📞 Soporte Dedicado</h3>
+                                    <p>Soporte técnico especializado para usuarios premium con respuesta prioritaria y asistencia personalizada.</p>
+                                </div>
+                                <div class="benefit-item">
+                                    <h3>🔒 Seguridad Garantizada</h3>
+                                    <p>Todos tus proyectos y datos están protegidos con encriptación de nivel bancario y backup automático.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información adicional -->
+                        <div style="text-align: center; margin-top: 40px; color: #888;">
+                            <p><small>💳 Aceptamos pagos a través de QR y Tigo Money</small></p>
+                            <p><small>🔄 Puedes cancelar tu suscripción en cualquier momento</small></p>
+                            <p><small>📧 ¿Preguntas? Contáctanos en soporte@renderia.com</small></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function initiatePremiumUpgrade() {
+            // Verificar si el usuario está autenticado
+             if (typeof usuario === 'undefined') { 
+                alert('🔐 Debes iniciar sesión para actualizar a Premium');
+                window.location.href = '/login';
+                return;
+             } 
+
+            // Confirmar la compra
+            const confirmUpgrade = confirm(
+                '🚀 ¿Deseas actualizar a Premium por 390 Bs anuales?\n\n' +
+                '✅ Renders ilimitados\n' +
+                '✅ Resolución 4K\n' +
+                '✅ Estilos exclusivos\n' +
+                '✅ Soporte prioritario\n\n' +
+                'Serás redirigido al proceso de pago.'
+            );
+
+            if (confirmUpgrade) {
+                // Mostrar loading
+                const button = event.target;
+                const originalText = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = '⏳ Redirigiendo al pago...';
+
+                // Redirigir a la página de pago
+                setTimeout(() => {
+                    window.location.href = '/pagofasil';
+                }, 1000);
+            }
+        }
+
+        // Animaciones al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animar los planes al cargar
+            const plans = document.querySelectorAll('.plan');
+            plans.forEach((plan, index) => {
+                plan.style.opacity = '0';
+                plan.style.transform = 'translateY(50px)';
+                
+                setTimeout(() => {
+                    plan.style.transition = 'all 0.6s ease';
+                    plan.style.opacity = '1';
+                    plan.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+
+            // Efecto de highlight para el plan premium
+            const premiumPlan = document.querySelector('.plan.premium');
+            if (premiumPlan) {
+                setInterval(() => {
+                    premiumPlan.style.boxShadow = premiumPlan.style.boxShadow === 'rgba(255, 215, 0, 0.4) 0px 20px 40px' 
+                        ? '0 20px 40px rgba(255, 215, 0, 0.2)' 
+                        : 'rgba(255, 215, 0, 0.4) 0px 20px 40px';
+                }, 3000);
+            }
+        });
+
+        // Tracking de eventos (opcional)
+        function trackPlanInteraction(planType, action) {
+            console.log(`Plan interaction: ${planType} - ${action}`);
+            // Aquí puedes agregar código de analytics si lo necesitas
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= proyecto.nombre %> - Render AI</title>
+    <link rel="icon" href="public/images/favicon.png">
+    <link rel="stylesheet" href="/public/css/styles2.css">
+    <style>
+        .proyecto-detalle-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+            color: #fff;
+        }
+
+        .proyecto-header {
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .proyecto-info h1 {
+            color: #b19cd9;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .proyecto-meta {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .categoria-badge {
+           background: #6c63ff;
+           color: white;
+           padding: 8px 16px;
+           border-radius: 20px;
+           font-size: 0.9rem;
+           text-transform: uppercase;
+           font-weight: bold;
+       }
+
+       .fecha-creacion {
+           color: #bbb;
+           font-size: 0.9rem;
+       }
+
+       .proyecto-descripcion {
+           color: #ccc;
+           font-size: 1rem;
+           line-height: 1.4;
+           margin-top: 15px;
+       }
+
+       .proyecto-acciones {
+           display: flex;
+           gap: 15px;
+       }
+
+       .btn-accion {
+           padding: 12px 20px;
+           border: none;
+           border-radius: 8px;
+           cursor: pointer;
+           font-weight: bold;
+           transition: all 0.3s ease;
+           text-decoration: none;
+           display: inline-block;
+           text-align: center;
+       }
+
+       .btn-editar {
+           background: linear-gradient(135deg, #FF9800, #F57C00);
+           color: white;
+       }
+
+       .btn-video {
+           background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+           color: white;
+       }
+
+       .btn-volver {
+           background: linear-gradient(135deg, #6c63ff, #574dcf);
+           color: white;
+       }
+
+       .btn-accion:hover {
+           transform: translateY(-2px);
+           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+       }
+
+       .renders-section {
+           background: linear-gradient(135deg, #1c1c1c, #2e2e2e);
+           border-radius: 15px;
+           padding: 30px;
+           margin-bottom: 30px;
+       }
+
+       .renders-header {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           margin-bottom: 25px;
+       }
+
+       .renders-header h2 {
+           color: #b19cd9;
+           font-size: 1.8rem;
+           margin: 0;
+       }
+
+       .btn-agregar-render {
+           background: linear-gradient(135deg, #4CAF50, #45a049);
+           color: white;
+           padding: 10px 20px;
+           border: none;
+           border-radius: 8px;
+           cursor: pointer;
+           font-weight: bold;
+       }
+
+       .renders-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+           gap: 25px;
+       }
+
+       .render-card {
+           background: linear-gradient(135deg, #333, #444);
+           border-radius: 15px;
+           padding: 20px;
+           border: 1px solid #555;
+           transition: all 0.3s ease;
+           position: relative;
+       }
+
+       .render-card:hover {
+           transform: translateY(-5px);
+           box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+       }
+
+       .render-card img {
+           width: 100%;
+           height: 180px;
+           object-fit: cover;
+           border-radius: 10px;
+           margin-bottom: 15px;
+       }
+
+       .render-card h3 {
+           color: #b19cd9;
+           font-size: 1.2rem;
+           margin: 10px 0;
+       }
+
+       .render-info {
+           background: rgba(0, 0, 0, 0.3);
+           padding: 10px;
+           border-radius: 8px;
+           margin: 10px 0;
+       }
+
+       .render-cost {
+           color: #4CAF50;
+           font-weight: bold;
+           font-size: 1.1rem;
+       }
+
+       .render-acciones {
+           display: flex;
+           gap: 10px;
+           margin-top: 15px;
+       }
+
+       .btn-render {
+           flex: 1;
+           padding: 8px 12px;
+           border: none;
+           border-radius: 6px;
+           cursor: pointer;
+           font-size: 0.9rem;
+           font-weight: bold;
+       }
+
+       .btn-ver-render {
+           background: linear-gradient(135deg, #4CAF50, #45a049);
+           color: white;
+       }
+
+       .btn-remover {
+           background: linear-gradient(135deg, #f44336, #d32f2f);
+           color: white;
+       }
+
+       .sin-renders {
+           text-align: center;
+           padding: 60px 20px;
+           background: rgba(0, 0, 0, 0.3);
+           border-radius: 15px;
+           border: 2px dashed #666;
+       }
+
+       .sin-renders h3 {
+           color: #b19cd9;
+           font-size: 1.5rem;
+           margin-bottom: 15px;
+       }
+
+       .sin-renders p {
+           color: #ccc;
+           margin-bottom: 25px;
+       }
+
+       /* Modal para agregar renders */
+       .modal {
+           display: none;
+           position: fixed;
+           z-index: 1000;
+           left: 0;
+           top: 0;
+           width: 100%;
+           height: 100%;
+           background-color: rgba(0, 0, 0, 0.8);
+       }
+
+       .modal-content {
+           background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+           margin: 5% auto;
+           padding: 30px;
+           border-radius: 15px;
+           width: 90%;
+           max-width: 600px;
+           color: #fff;
+           max-height: 80vh;
+           overflow-y: auto;
+       }
+
+       .modal-header {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           margin-bottom: 25px;
+       }
+
+       .modal-title {
+           color: #b19cd9;
+           font-size: 1.5rem;
+           margin: 0;
+       }
+
+       .close {
+           color: #aaa;
+           font-size: 28px;
+           font-weight: bold;
+           cursor: pointer;
+       }
+
+       .close:hover {
+           color: #fff;
+       }
+
+       .renders-disponibles {
+           display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+           gap: 15px;
+       }
+
+       .render-disponible {
+           background: #333;
+           border-radius: 10px;
+           padding: 15px;
+           cursor: pointer;
+           border: 2px solid transparent;
+           transition: all 0.3s ease;
+       }
+
+       .render-disponible:hover {
+           border-color: #6c63ff;
+           transform: scale(1.02);
+       }
+
+       .render-disponible.selected {
+           border-color: #4CAF50;
+           background: rgba(76, 175, 80, 0.1);
+       }
+
+       .render-disponible img {
+           width: 100%;
+           height: 120px;
+           object-fit: cover;
+           border-radius: 8px;
+           margin-bottom: 10px;
+       }
+
+       .render-disponible h4 {
+           color: #fff;
+           font-size: 0.9rem;
+           margin: 5px 0;
+       }
+
+       .render-disponible .cost {
+           color: #4CAF50;
+           font-size: 0.8rem;
+       }
+
+       @media (max-width: 768px) {
+           .proyecto-header {
+               flex-direction: column;
+               gap: 20px;
+               text-align: center;
+           }
+
+           .proyecto-meta {
+               justify-content: center;
+           }
+
+           .renders-grid {
+               grid-template-columns: 1fr;
+           }
+
+           .renders-disponibles {
+               grid-template-columns: 1fr;
+           }
+       }
+   </style>
+</head>
+<body>
+   <div id="page-content-wrapper">
+       <div class="container-fluid">
+           <div class="row">
+               <!-- Incluir la Sidebar -->
+               <div class="col-auto">
+                   <%- include('./partials/sidebar.ejs') %>
+               </div>
+               
+               <!-- Contenido Principal -->
+               <div class="col">
+                   <div class="proyecto-detalle-container">
+                       <!-- Header del Proyecto -->
+                       <div class="proyecto-header">
+                           <div class="proyecto-info">
+                               <h1><%= proyecto.nombre %></h1>
+                               <div class="proyecto-meta">
+                                   <span class="categoria-badge"><%= proyecto.categoria %></span>
+                                   <span class="fecha-creacion">
+                                       📅 Creado el <%= new Date(proyecto.createdAt).toLocaleDateString('es-ES') %>
+                                   </span>
+                               </div>
+                               <% if (proyecto.descripcion) { %>
+                                   <div class="proyecto-descripcion">
+                                       <%= proyecto.descripcion %>
+                                   </div>
+                               <% } %>
+                           </div>
+
+                           <div class="proyecto-acciones">
+                               <button class="btn-accion btn-editar" onclick="editarProyecto()">
+                                   ✏️ Editar
+                               </button>
+                               <% if (renders && renders.length >= 2) { %>
+                                   <a href="/videos/crear/<%= proyecto._id %>" class="btn-accion btn-video">
+                                       🎬 Crear Video
+                                   </a>
+                               <% } else { %>
+                                   <button class="btn-accion btn-video" disabled style="opacity: 0.5;" 
+                                           title="Necesitas al menos 2 renders para crear un video">
+                                       🎬 Video (2+ renders)
+                                   </button>
+                               <% } %>
+                               <a href="/proyectos" class="btn-accion btn-volver">
+                                   ← Volver
+                               </a>
+                           </div>
+                       </div>
+
+                       <!-- Sección de Renders -->
+                       <div class="renders-section">
+                           <div class="renders-header">
+                               <h2>🎨 Renders del Proyecto (<%= renders ? renders.length : 0 %>)</h2>
+                               <button class="btn-agregar-render" onclick="abrirModalRenders()">
+                                   ➕ Agregar Renders
+                               </button>
+                           </div>
+
+                           <% if (renders && renders.length > 0) { %>
+                               <div class="renders-grid">
+                                   <% renders.forEach(function(render) { %>
+                                       <div class="render-card">
+                                           <% if (render.urlImagen) { %>
+                                               <img src="<%= render.urlImagen %>" alt="<%= render.titulo %>" loading="lazy">
+                                           <% } else { %>
+                                               <div style="width: 100%; height: 180px; background-color: #444; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+                                                   <span style="color: #888;">Sin imagen</span>
+                                               </div>
+                                           <% } %>
+                                           
+                                           <h3><%= render.titulo || 'Sin título' %></h3>
+                                           
+                                           <div class="render-info">
+                                               <% if (render.estimacionCosto) { %>
+                                                   <div class="render-cost">
+                                                       💰 $<%= render.estimacionCosto.toLocaleString() %> USD
+                                                   </div>
+                                               <% } %>
+                                               
+                                               <% if (render.parametros) { %>
+                                                   <div style="font-size: 0.8rem; color: #ccc; margin-top: 5px;">
+                                                       <% if (render.parametros.tamaño) { %>
+                                                           📐 <%= render.parametros.tamaño %>m² • 
+                                                       <% } %>
+                                                       <% if (render.parametros.pisos) { %>
+                                                           🏢 <%= render.parametros.pisos %> piso(s)
+                                                       <% } %>
+                                                   </div>
+                                               <% } %>
+                                           </div>
+                                           
+                                           <div class="render-acciones">
+                                               <button class="btn-render btn-ver-render" onclick="verRender('<%= render._id %>')">
+                                                   👁️ Ver
+                                               </button>
+                                               <button class="btn-render btn-remover" onclick="removerRender('<%= render._id %>')">
+                                                   🗑️ Remover
+                                               </button>
+                                           </div>
+                                       </div>
+                                   <% }); %>
+                               </div>
+                           <% } else { %>
+                               <div class="sin-renders">
+                                   <h3>🎨 Este proyecto aún no tiene renders</h3>
+                                   <p>Agrega renders existentes o crea nuevos renders para este proyecto</p>
+                                   <button class="btn-agregar-render" onclick="abrirModalRenders()">
+                                       ➕ Agregar Renders
+                                   </button>
+                                   <a href="/renders" style="margin-left: 15px;" class="btn-agregar-render">
+                                       🎨 Crear Nuevo Render
+                                   </a>
+                               </div>
+                           <% } %>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <!-- Modal para agregar renders -->
+   <div id="modalRenders" class="modal">
+       <div class="modal-content">
+           <div class="modal-header">
+               <h2 class="modal-title">Agregar Renders al Proyecto</h2>
+               <span class="close" onclick="cerrarModalRenders()">&times;</span>
+           </div>
+           
+           <div id="rendersDisponibles">
+               <p style="text-align: center; color: #999;">Cargando renders disponibles...</p>
+           </div>
+           
+           <div style="margin-top: 20px; text-align: center;">
+               <button id="btnAgregarSeleccionados" class="btn-agregar-render" style="display: none;">
+                   ➕ Agregar Seleccionados
+               </button>
+           </div>
+       </div>
+   </div>
+
+   <script>
+       let rendersSeleccionados = [];
+
+       // Funciones del modal
+       function abrirModalRenders() {
+           document.getElementById('modalRenders').style.display = 'block';
+           cargarRendersDisponibles();
+       }
+
+       function cerrarModalRenders() {
+           document.getElementById('modalRenders').style.display = 'none';
+           rendersSeleccionados = [];
+       }
+
+       // Cargar renders disponibles
+       async function cargarRendersDisponibles() {
+           try {
+               const response = await fetch('/proyectos/renders-disponibles');
+               const resultado = await response.json();
+
+               const container = document.getElementById('rendersDisponibles');
+
+               if (resultado.exito && resultado.renders.length > 0) {
+                   container.innerHTML = `
+                       <h3 style="color: #b19cd9; margin-bottom: 20px;">Selecciona los renders a agregar:</h3>
+                       <div class="renders-disponibles" id="gridRenders"></div>
+                   `;
+
+                   const grid = document.getElementById('gridRenders');
+                   resultado.renders.forEach(render => {
+                       const renderDiv = document.createElement('div');
+                       renderDiv.className = 'render-disponible';
+                       renderDiv.onclick = () => toggleRenderSeleccion(render._id, renderDiv);
+                       
+                       renderDiv.innerHTML = `
+                           ${render.urlImagen ? 
+                               `<img src="${render.urlImagen}" alt="${render.titulo}" loading="lazy">` :
+                               `<div style="width: 100%; height: 120px; background-color: #555; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                                   <span style="color: #888; font-size: 0.8rem;">Sin imagen</span>
+                               </div>`
+                           }
+                           <h4>${render.titulo || 'Sin título'}</h4>
+                           <div class="cost">$${render.estimacionCosto ? render.estimacionCosto.toLocaleString() : '0'}</div>
+                       `;
+                       
+                       grid.appendChild(renderDiv);
+                   });
+               } else {
+                   container.innerHTML = `
+                       <div style="text-align: center; padding: 40px;">
+                           <h3 style="color: #b19cd9;">No hay renders disponibles</h3>
+                           <p style="color: #ccc;">Todos tus renders ya están asignados a proyectos o no tienes renders sin asignar.</p>
+                           <a href="/renders" class="btn-agregar-render" style="margin-top: 15px;">
+                               🎨 Crear Nuevo Render
+                           </a>
+                       </div>
+                   `;
+               }
+           } catch (error) {
+               console.error('Error cargando renders:', error);
+               document.getElementById('rendersDisponibles').innerHTML = `
+                   <div style="text-align: center; color: #ff6b6b;">
+                       Error cargando renders disponibles
+                   </div>
+               `;
+           }
+       }
+
+       // Toggle selección de render
+       function toggleRenderSeleccion(renderId, elemento) {
+           if (rendersSeleccionados.includes(renderId)) {
+               rendersSeleccionados = rendersSeleccionados.filter(id => id !== renderId);
+               elemento.classList.remove('selected');
+           } else {
+               rendersSeleccionados.push(renderId);
+               elemento.classList.add('selected');
+           }
+
+           // Mostrar/ocultar botón
+           const boton = document.getElementById('btnAgregarSeleccionados');
+           if (rendersSeleccionados.length > 0) {
+               boton.style.display = 'block';
+               boton.textContent = `➕ Agregar ${rendersSeleccionados.length} Render${rendersSeleccionados.length > 1 ? 's' : ''}`;
+           } else {
+               boton.style.display = 'none';
+           }
+       }
+
+       // Agregar renders seleccionados
+       document.getElementById('btnAgregarSeleccionados').addEventListener('click', async function() {
+           if (rendersSeleccionados.length === 0) return;
+
+           try {
+               for (const renderId of rendersSeleccionados) {
+                   const response = await fetch(`/proyectos/<%= proyecto._id %>/agregar-render`, {
+                       method: 'POST',
+                       headers: {
+                           'Content-Type': 'application/json'
+                       },
+                       body: JSON.stringify({ renderId })
+                   });
+
+                   const resultado = await response.json();
+                   if (!resultado.exito) {
+                       console.error('Error agregando render:', resultado.mensaje);
+                   }
+               }
+
+               alert('✅ Renders agregados exitosamente');
+               location.reload();
+           } catch (error) {
+               console.error('Error:', error);
+               alert('❌ Error agregando renders al proyecto');
+           }
+       });
+
+       // Funciones de renders
+       function verRender(renderId) {
+           window.location.href = `/render/${renderId}`;
+       }
+
+       async function removerRender(renderId) {
+           if (!confirm('¿Estás seguro de que quieres remover este render del proyecto?')) {
+               return;
+           }
+
+           try {
+               const response = await fetch(`/proyectos/<%= proyecto._id %>/remover-render/${renderId}`, {
+                   method: 'DELETE'
+               });
+
+               const resultado = await response.json();
+
+               if (resultado.exito) {
+                   alert('✅ Render removido del proyecto');
+                   location.reload();
+               } else {
+                   alert('❌ Error: ' + resultado.mensaje);
+               }
+           } catch (error) {
+               console.error('Error:', error);
+               alert('❌ Error removiendo render del proyecto');
+           }
+       }
+
+       function editarProyecto() {
+           // TODO: Implementar modal de edición
+           alert('Funcionalidad de edición próximamente');
+       }
+
+       // Cerrar modal al hacer click fuera
+       window.onclick = function(event) {
+           const modal = document.getElementById('modalRenders');
+           if (event.target === modal) {
+               cerrarModalRenders();
+           }
+       }
+   </script>
+</body>
+</html>
